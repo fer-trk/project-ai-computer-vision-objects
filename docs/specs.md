@@ -14,6 +14,23 @@ Contexto de demostración propuesto por el usuario: partidos o material relacion
 - Proceso: bloques pequeños revisados por el usuario; estructura ampliable sin construir infraestructura especulativa.
 - Fuente: `assignment.md`. El usuario confirma que el roadmap enlazado no añade requisitos; no es necesario investigarlo.
 
+## Prioridad de producto: sponsors de jugadores
+
+Decisiones del usuario registradas el 21/10/2026. El valor principal es medir exposición de marcas sobre ropa y palas en cada vídeo individual publicado en TikTok. El cliente analiza una publicación cada vez; no mezclar duraciones ni resultados de diferentes vídeos ni presuponer descarga automática desde la aplicación.
+
+- Informe principal: exposición clara detectada en ropa y palas. Informe secundario separado: carteles, red y otros soportes estáticos. El usuario eligió conservar estos últimos como sección secundaria.
+- Una marca presente en camiseta y cartel conserva mediciones separadas por grupo de soporte; la visibilidad del cartel no aumenta los segundos de equipación. Dentro de cada grupo, unir intervalos simultáneos de la misma marca sin duplicarlos.
+- La duración total del vídeo es el denominador de ambos grupos. No sumar porcentajes de grupos como si fueran disjuntos: pueden aparecer simultáneamente.
+- Mantener las tres categorías de evidencia en ambos grupos: solo claros suman tiempo; hipótesis muestran posible marca sin medición; no identificables se descartan. Si no puede determinarse el soporte, no atribuirlo automáticamente a equipación por reconocer la marca.
+- Discriminar soporte es necesario para este contrato. El método de reconocimiento, anotación o asociación se acordará con el usuario antes de implementarlo; no se presupone un clasificador adicional ni reconocimiento de jugadores.
+- Elegir marcas y evaluar la utilidad priorizando ejemplos de ropa/palas. Un buen resultado en carteles no demuestra desempeño sobre equipación. Registrar errores y cobertura por soporte, sin dejar que ejemplos estáticos fáciles dominen la conclusión.
+- Soporte estático no significa visibilidad continua: también puede salir de plano, quedar oculto o cambiar el anuncio. Aplicar el mismo criterio de evidencia, manteniendo separada su medición.
+- Material actual: cuatro publicaciones descargadas, con metadatos, y una primera muestra de 48 frames. Permisos y suficiencia del dataset siguen pendientes; la existencia de archivos no resuelve esos puntos.
+
+El usuario revisó la muestra uniforme e indicó que la mayoría de frames no sirven para el objetivo por lejanía y movimiento/poca definición. Es una revisión cualitativa, sin porcentaje cuantificado ni etiquetas por logo. Se acuerda aprovechar primero primeros planos y celebraciones de estos cuatro vídeos y buscar más material solo si no basta.
+
+La selección dirigida sirve para obtener candidatos de entrenamiento y ejemplos de claridad. La evaluación del producto y la medición de exposición mantienen el vídeo completo, incluyendo tramos difíciles: no recortar la entrada de evaluación para aparentar mayor desempeño ni imputar visibilidad en tramos descartados.
+
 ## Contexto de pádel y demo acordada en conversación
 
 Registro de la conversación del 20 de octubre de 2026; las specs completas siguen siendo borrador. El usuario quiere analizar logos en ropa, palas y elementos de pista. La exposición de patrocinadores en ropa es una prioridad de interés. No limitar el dataset ni las pruebas a vallas; revisar ejemplos de cada soporte y documentar dificultad y resultados sin prometer detectar logos ilegibles.
@@ -44,9 +61,9 @@ Registro de la conversación del 20 de octubre de 2026; las specs completas sigu
 | RF-02 | Esencial | En una imagen de evaluación, mostrar la caja del logo detectado. Registrar también resultados en imágenes sin la marca y fallos conocidos. |
 | RF-03 | Medio | Procesar un archivo de vídeo y mostrar el nombre de clase debajo de cada caja, manteniendo su correspondencia con la detección. |
 | RF-04 | Avanzado | Mostrar junto a la clase la confianza del detector, entre 0 y 100 %. Explicar que no garantiza exactitud ni es una probabilidad calibrada. |
-| RF-05 | Avanzado | Persistir detecciones con vídeo, ejecución, marca, timestamp, caja, confianza, recorte y categoría de evidencia; distinguir hipótesis sin duración de las apariciones claras. Recuperar esos datos tras reiniciar; verificar referencias y recortes legibles. |
+| RF-05 | Avanzado | Persistir detecciones con vídeo, ejecución, marca, timestamp, caja, confianza, recorte, categoría de evidencia y soporte/grupo de informe; distinguir hipótesis sin duración de las apariciones claras. Recuperar esos datos tras reiniciar; verificar referencias y recortes legibles. |
 | RF-06 | Avanzado | Un mismo detector reconoce al menos dos marcas. Evaluar y guardar resultados separados, incluyendo un caso con ambas marcas simultáneas. |
-| RF-07 | Briefing | Generar informe con duración total del vídeo, segundos y porcentaje de exposición clara detectada por marca, parámetros usados y versión del modelo; las hipótesis se muestran aparte sin medición temporal. Un vídeo sin detecciones produce un informe válido con ceros. |
+| RF-07 | Briefing | Generar informe con duración total del vídeo, segundos y porcentaje de exposición clara detectada por marca, con equipación en informe principal y soportes estáticos en sección secundaria, parámetros usados y versión del modelo; las hipótesis se muestran aparte sin medición temporal. Un vídeo sin detecciones produce un informe válido con ceros. |
 | RF-08 | Experto | Aplicación web para subir vídeos, conocer el estado del análisis y visualizar resultados e informe. Mostrar errores comprensibles para archivos inválidos o límites excedidos. |
 | RF-09 | Experto | Modelo servido en cloud mediante API documentada, accesible desde otro cliente. Probar un vídeo válido y entradas inválidas; publicar límites y comprobar coste cero. Ejecutar todo localmente no satisface este requisito. |
 | RF-10 | Entrega | Repositorio documentado con instalación reproducible, ramas operativas y commits convencionales; Kanban actualizado, demo en vivo y presentación técnica. |
@@ -61,7 +78,7 @@ Decisión explícita del usuario, 20 de octubre de 2026: la herramienta se centr
 | 2. Logo parcialmente visible con hipótesis de marca | Caja y etiqueta explícita «Posible marca X — no contabilizada», con confianza diferenciada de certeza. | No: no calcular ni mostrar duración o porcentaje para la hipótesis; puede conservarse el instante como referencia. |
 | 3. Evidencia insuficiente para identificar marca | Descartar de la lista de marcas y del informe de exposición; no inventar una hipótesis. | No. |
 
-- La clasificación se aplica a cada candidato, no a todo el frame: un logo claro de una valla puede contabilizarse aunque otro en una pala sea ilegible en el mismo instante.
+- La clasificación se aplica a cada candidato, no a todo el frame: un logo claro de una valla puede contabilizarse en la sección secundaria aunque otro en una pala sea ilegible; la valla no suma exposición a equipación.
 - El informe principal se denomina exposición clara detectada por marca. El porcentaje utiliza la duración total del vídeo como denominador; descartar frames difíciles no reduce ese denominador.
 - Una secuencia clara → probable/no identificable → clara contiene intervalos contables separados. No sumar ni rellenar el tramo incierto mediante continuidad del objeto, patrocinio conocido o hipótesis de identidad.
 - Persistir el estado de evidencia y la versión de la regla utilizada. Para hipótesis guardar la marca candidata, confianza, recorte e instante si existe; duración de exposición no aplicable, nunca una duración medida de cero que parezca una observación confirmada.
@@ -94,7 +111,7 @@ Pendiente de revisión antes de implementar RF-07.
 
 - Vídeo: identificador, nombre original, duración válida, metadatos técnicos y referencia al archivo.
 - Ejecución: identificador, vídeo, estado, versión del modelo, configuración, inicio/fin y error si falla.
-- Detección: ejecución, clase candidata, categoría de evidencia, regla aplicada, timestamp/frame, coordenadas, confianza y referencia al recorte persistido; las hipótesis no tienen duración de exposición. Proteger la coherencia entre BD y archivos.
+- Detección: ejecución, clase candidata, soporte/grupo de informe, categoría de evidencia, regla aplicada, timestamp/frame, coordenadas, confianza y referencia al recorte persistido; las hipótesis no tienen duración de exposición. Proteger la coherencia entre BD y archivos.
 - Informe: ejecución, marca, intervalos unidos, segundos y porcentaje. Repetir un análisis crea una ejecución distinguible.
 - Guardar recortes como archivos duraderos con referencia en BD es una propuesta; revisar si la evaluación exige binarios en la propia BD.
 - Front y API reutilizan el mismo núcleo de inferencia e informe. No duplicar la lógica ni introducir microservicios sin necesidad.
@@ -114,5 +131,3 @@ Decidir con el usuario: marcas y fuentes; hardware y horas disponibles; stack/mo
 Las consignas permiten análisis offline pero mencionan detección en tiempo real en evaluación. Mantenerlo como ambigüedad explícita; proponer una demostración de velocidad sin añadir streaming obligatorio. El usuario debe resolver esta interpretación antes de cerrar alcance.
 
 Si plazo o recursos amenazan un requisito obligatorio, comunicar el bloqueo y alternativas. Reducir extras o tamaño de demo con acuerdo; no eliminar silenciosamente niveles ni sustituir entrenamiento o cloud por una simulación.
-
-

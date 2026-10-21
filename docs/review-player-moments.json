@@ -1,0 +1,20 @@
+{
+  "status": "moments selected by the user; brands and evidence categories not yet approved",
+  "run_name": "player-moments-2026-10-21",
+  "title": "# Momentos seleccionados por el usuario",
+  "basis": "User supplied point timestamps and intervals; intervals sampled each second including both endpoints.",
+  "videos": {
+    "7695444675531951382": {
+      "user_selection": "seconds 35 and 49",
+      "requested_seconds": [35, 49]
+    },
+    "7695453226648292630": {
+      "user_selection": "seconds 13–16 and 23–30",
+      "requested_seconds": [13, 14, 15, 16, 23, 24, 25, 26, 27, 28, 29, 30]
+    },
+    "7697671396830317846": {
+      "user_selection": "seconds 25, 27 and 29",
+      "requested_seconds": [25, 27, 29]
+    }
+  }
+}

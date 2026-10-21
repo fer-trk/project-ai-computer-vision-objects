@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "reviews": [
+    {
+      "review_id": "7697671396830317846-frame-725-NOX",
+      "video_id": "7697671396830317846",
+      "frame_index": 725,
+      "timestamp_seconds": 29.0,
+      "image": "data/review/player-moments-2026-10-21/frames/7697671396830317846/T03_frame_000725.png",
+      "image_sha256": "017b5348045c9c98c59d3dd40196b36046ead9ad457e0865a2817389b8603201",
+      "brand": "NOX",
+      "support": "clothing",
+      "report_group": "primary",
+      "evidence_category": 1,
+      "decision_source": "explicit_user_confirmation",
+      "decision_date_local": "2026-10-21",
+      "bbox_xyxy": null,
+      "bbox_status": "pending_manual_annotation",
+      "scope": "Only the NOX logo in this image; other logos and examples remain unreviewed."
+    }
+  ]
+}

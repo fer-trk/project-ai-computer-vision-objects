@@ -64,3 +64,9 @@ La especificación contiene requisitos; la issue conserva ejecución y decisione
 | Entrega | T09 | 1 |
 
 Las vistas Kanban conservan los cuatro niveles de las consignas y el tablero general. T03 prueba viabilidad cloud pronto; T14 realiza el despliegue completo. Los estados y checkboxes se actualizan con evidencia real y revisión del usuario; no se cierran tareas por mera planificación. Registrar decisiones y bloqueos en la issue en el momento en que ocurren. Los días 7 y 8 siguen reservados para calidad y entrega.
+
+Prioridad de producto acordada el 21/10/2026: informe principal de ropa/palas y sección secundaria de soportes estáticos, por vídeo completo. En T04 se revisa primero una muestra dirigida de los vídeos actuales; en T10/T12 la evaluación distingue soportes y no se valida el producto solo con carteles. Se mantienen catorce tareas.
+
+## Ampliación de fuentes para una segunda etapa
+
+El usuario propone complementar los vídeos actuales de TikTok con publicaciones de Instagram oficial de los jugadores. Queda registrado como segunda etapa, sin ampliar la entrega de ocho días ni añadir tareas al backlog actual. Cuentas, enlaces, condiciones de uso y selección quedan pendientes. [Referencias de camisetas y criterios para incorporar Instagram](sponsor-reference.md). Evitar que reposts o tomas del mismo origen se repartan entre entrenamiento y evaluación.

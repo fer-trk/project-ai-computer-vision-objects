@@ -1,0 +1,23 @@
+{
+  "status": "candidate windows for manual review; not approved labels",
+  "basis": "initial contact sheets and full-resolution spot checks, adjusted after user feedback",
+  "step_seconds": 2,
+  "videos": {
+    "7507398381900205334": {
+      "windows_seconds": [[68, 74]],
+      "reason": "Closer shot toward the end; inspect clothing detail rather than static boards."
+    },
+    "7697683756945280279": {
+      "windows_seconds": [[34, 38], [42, 48], [52, 56.4]],
+      "reason": "Closer side, back and front views of clothing; retain ambiguous candidates for review."
+    },
+    "7697932261643128086": {
+      "windows_seconds": [[49, 52], [54, 58.4]],
+      "reason": "Closer action shot and headwear close-up; inspect legibility at native resolution."
+    },
+    "7698076371569888534": {
+      "windows_seconds": [[8, 10], [14, 24], [32, 42]],
+      "reason": "Celebration and closer clothing/paddle views; avoid the spectator-only interval."
+    }
+  }
+}

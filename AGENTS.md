@@ -14,3 +14,4 @@
 - Never commit secrets, unlicensed media, raw datasets, user uploads, generated crops or large model weights. Record asset provenance and licenses; agree on safe distribution of required demonstration assets and model artifacts.
 - Close each block with what changed, verification evidence, limitations and the next decision. Update the issue rather than duplicating its history across files.
 - Keep the Kanban faithful to actual work: use the fourteen deliverables in docs/plan.md, record decisions and blockers in their issues, and update status/checklists only from evidence. Preserve stable issue IDs and links; use Orden for delivery sequence.
+- Prioritize sponsor logos on clothing and paddles in the main report for each complete video; keep static signage/net exposure in a separate secondary section. Do not claim product success from easy static-logo results. Record sample-quality feedback and review candidate logo regions at native resolution.
