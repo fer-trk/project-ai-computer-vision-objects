@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-23",
+  "source_manifest": "data/review/nox-expansion-2026-10-23/manifest.json",
+  "reviewer": "assistant_under_user_delegation",
+  "method": "All 12 full-resolution originals visually inspected; native-scale detail crops inspected for E01, E05, E08 and E12. No enhancement or synthetic detail.",
+  "status": "local_annotation_review_not_training_dataset",
+  "coordinate_convention": "xyxy integer pixels in original 1080x1920 image; right and bottom exclusive",
+  "rights_status": "pending_documentation_before_training_or_new_external_upload",
+  "split": null,
+  "origin_grouping": "All five videos remain potentially related; no independent train/validation/test groups approved.",
+  "examples": [
+    {"id":"E01","decision":"exclude_ambiguous","boxes":[],"reason":"Sleeve mark is motion-blurred; cannot label a clear NOX or treat the image as a confirmed negative."},
+    {"id":"E02","decision":"reviewed_negative","boxes":[],"reason":"Full image reviewed: other-brand red shirt and dark paddle; no visible identifiable or suspected NOX logo found. Describes visible content only, not hidden branding."},
+    {"id":"E03","decision":"exclude_ambiguous","boxes":[],"reason":"The foreground arm and body obscure the relevant chest/clothing regions. Exclude rather than infer NOX from the adjacent person or classify the occluded scene as background."},
+    {"id":"E04","decision":"reviewed_negative","boxes":[],"reason":"Other-brand back/shorts, net and background reviewed; no visible NOX candidate found. The original selection reason did not establish a NOX logo."},
+    {"id":"E05","decision":"clear_positive","boxes":[{"label":"nox","bbox_xyxy":[538,1224,681,1310],"visibility":"clear","support":"clothing","placement":"wristband"}],"reason":"NOX wordmark is legible on the white wristband despite rotation. No additional visible NOX logo found in the full frame."},
+    {"id":"E06","decision":"exclude_ambiguous","boxes":[],"reason":"Lower-back wordmark and action/paddle regions are blurred; retain for difficult-case review, not clear-positive or negative export."},
+    {"id":"E07","decision":"reviewed_negative","boxes":[],"reason":"Other-brand shirt, paddle, shorts and static background reviewed; no visible NOX candidate found."},
+    {"id":"E08","decision":"clear_positive","boxes":[{"label":"nox","bbox_xyxy":[560,1203,615,1237],"visibility":"clear","support":"clothing","placement":"chest"}],"reason":"Small NOX chest wordmark is identifiable at original scale. Other visible shirt logos are different brands."},
+    {"id":"E09","decision":"reviewed_negative","boxes":[],"reason":"Black shirt displays other-brand logos; full image contains no visible NOX candidate."},
+    {"id":"E10","decision":"exclude_ambiguous","boxes":[],"reason":"Chest and paddle marks are blurred and too uncertain for a clear-positive annotation; do not turn them into negative background."},
+    {"id":"E11","decision":"reviewed_negative","boxes":[],"reason":"Other-brand shirt, sleeve, net and visible paddle region reviewed; no visible NOX candidate found. Do not infer a brand behind occlusion."},
+    {"id":"E12","decision":"exclude_ambiguous","boxes":[],"reason":"Small marks on socks/wrist regions are not securely identifiable; occlusion prevents using this frame as a safe negative. No attribution based on player identity."}
+  ]
+}
