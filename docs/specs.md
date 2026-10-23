@@ -6,7 +6,7 @@ Estado: borrador para revisión. Las propuestas no son decisiones aprobadas.
 
 Una empresa de publicidad necesita medir la exposición visual de marcas en vídeos. El sistema detectará logos, localizará sus apariciones y presentará segundos y porcentaje de exposición por marca, con detecciones persistidas.
 
-Contexto de demostración propuesto por el usuario: partidos o material relacionado con pádel. Marcas pendientes de selección; empezar con una y extender a al menos dos. No se presupone permiso para descargar o redistribuir retransmisiones.
+Contexto de demostración propuesto por el usuario: partidos o material relacionado con pádel. Primera marca aprobada por el usuario el 21/10/2026: NOX. Ampliar después a al menos dos marcas; las adicionales siguen pendientes de selección. La selección de marca no aprueba automáticamente imágenes ni cajas de entrenamiento. No se presupone permiso para descargar o redistribuir retransmisiones.
 
 - Plazo máximo: ocho días hábiles, incluida gestión, aprendizaje, pruebas y presentación. Inicio y horas disponibles por día pendientes. No contar con ampliación.
 - Coste financiero: cero. Verificar licencias, cuotas y ausencia de cargos automáticos antes de adoptar servicios. Sin entrenamiento pesado en CI.

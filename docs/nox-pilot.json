@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-21",
+  "first_brand": "NOX",
+  "brand_selection_source": "explicit_user_confirmation",
+  "status": "pilot_review_not_training_dataset",
+  "coordinate_convention": "xyxy pixels; origin top-left; right and bottom exclusive",
+  "split": null,
+  "scope": "Three review examples; all proposed boxes need user review; no new evidence approvals.",
+  "examples": [
+    {
+      "id": "N01",
+      "video_id": "7697671396830317846",
+      "frame_index": 725,
+      "timestamp_seconds": 29.0,
+      "image": "data/review/player-moments-2026-10-21/frames/7697671396830317846/T03_frame_000725.png",
+      "placement": "chest",
+      "evidence_category": 1,
+      "decision_source": "explicit_user_confirmation",
+      "proposed_bbox_xyxy": [
+        619,
+        1564,
+        710,
+        1614
+      ],
+      "bbox_status": "proposed_pending_user_review",
+      "crop_xyxy": [
+        430,
+        1430,
+        970,
+        1750
+      ],
+      "caption": "Pecho: claridad aprobada; caja propuesta",
+      "image_sha256": "017b5348045c9c98c59d3dd40196b36046ead9ad457e0865a2817389b8603201",
+      "image_width": 1080,
+      "image_height": 1920,
+      "brand": "NOX",
+      "support": "clothing",
+      "report_group": "primary"
+    },
+    {
+      "id": "N02",
+      "video_id": "7698076371569888534",
+      "frame_index": 575,
+      "timestamp_seconds": 23.0,
+      "image": "data/review/targeted-2026-10-21/frames/7698076371569888534/T06_frame_000575.png",
+      "placement": "lower_back",
+      "evidence_category": null,
+      "decision_source": "pending_user_review",
+      "proposed_evidence_category": 1,
+      "proposed_bbox_xyxy": [
+        789,
+        1044,
+        1063,
+        1125
+      ],
+      "bbox_status": "proposed_pending_user_review",
+      "crop_xyxy": [
+        540,
+        900,
+        1080,
+        1220
+      ],
+      "caption": "Espalda: revisar claridad y caja propuesta",
+      "image_sha256": "3cb4f8dfd19cab5947be6ecc7eeb84a0bbfa2a0ec90c4a7306603bdf79fc26c3",
+      "image_width": 1080,
+      "image_height": 1920,
+      "brand": "NOX",
+      "support": "clothing",
+      "report_group": "primary"
+    },
+    {
+      "id": "N03",
+      "video_id": "7698076371569888534",
+      "frame_index": 525,
+      "timestamp_seconds": 21.0,
+      "image": "data/review/targeted-2026-10-21/frames/7698076371569888534/T05_frame_000525.png",
+      "placement": "lower_back",
+      "evidence_category": null,
+      "decision_source": "pending_user_review",
+      "proposed_evidence_category": 2,
+      "proposed_bbox_xyxy": null,
+      "bbox_status": "not_proposed_for_positive_annotation",
+      "crop_xyxy": [
+        410,
+        1240,
+        950,
+        1560
+      ],
+      "caption": "Movido: propongo hipotesis, sin positivo claro",
+      "image_sha256": "4b82fcb903a6cd77c43c3fedb62f5e6ae495e871e98498cfef4ccaa01999ee36",
+      "image_width": 1080,
+      "image_height": 1920,
+      "brand": "NOX",
+      "support": "clothing",
+      "report_group": "primary"
+    }
+  ]
+}

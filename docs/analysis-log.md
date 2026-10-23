@@ -236,3 +236,35 @@ Las variantes difieren: el catálogo NOX presenta NFA en una manga, mientras que
 Solo se mantiene la aprobación explícita de categoría 1 para NOX en el segundo 29 del vídeo 7697671396830317846. El resto del inventario no añade aprobaciones, anotaciones ni segundos de exposición. No se descargaron imágenes de catálogo ni se cambió el listado definitivo de clases.
 
 Instagram queda registrado como ampliación de fuentes para una segunda etapa: confirmar cuentas/enlaces y condiciones de uso; revisar utilidad real; agrupar reposts y tomas del mismo origen antes de particionar; evaluar con el mismo criterio por soporte y claridad. No se han descargado vídeos ni iniciado integración con Instagram. No se amplía el plazo ni se añaden tarjetas al backlog.
+
+## 15. NOX elegida como primera marca y piloto de cajas
+
+El 21/10/2026 el usuario aprueba empezar con NOX para el nivel esencial. Se actualiza la selección de primera marca en las especificaciones; modelo, herramienta de anotación y marcas adicionales siguen pendientes.
+
+Se prepara [un piloto de tres ejemplos](nox-pilot-review.md), con dos cajas manuales propuestas sobre pecho y espalda y un caso movido para contrastar el criterio de claridad. Se revisaron los originales a resolución completa, verificaron hashes/dimensiones y límites de cajas, y se inspeccionó la comparación de recortes a escala 1:1. Las cajas no proceden de un modelo ni tienen aprobación del usuario todavía.
+
+El frame 725 del vídeo 7697671396830317846 conserva la categoría 1 ya aprobada; su caja propuesta es nueva. Los otros dos ejemplos mantienen claridad pendiente de revisión. La propuesta de categoría 2 para el ejemplo movido es provisional, no una decisión del usuario. review-decisions.json permanece intacto. No hay exportación de etiquetas, particiones ni entrenamiento. El piloto fija criterio antes de ampliar anotaciones y no acredita suficiencia del dataset.
+
+## 16. Lote local para CVAT y validación de procedencia
+
+El 21/10/2026 el usuario acepta la propuesta de herramientas y autoriza preparar el siguiente bloque. Se añade scripts/prepare_annotation_batch.py y [la guía de anotación en CVAT](cvat-nox-guide.md), reutilizando el entorno existente sin instalar dependencias adicionales.
+
+Se genera data/review/nox-cvat-pilot-2026-10-21/images.zip con tres PNG completos del piloto, conservando sus bytes, y un manifiesto con hashes de imágenes/vídeos, procedencia, frame, segundo, dimensiones y estados de revisión. Las propuestas no se convierten en etiquetas de entrenamiento. No se asignan particiones ni se cambian review-decisions.json o nox-pilot.json.
+
+Se verifican integridad, correspondencia con manifiestos de extracción y vídeos actuales, duplicados exactos y límites de cajas. Nueve pruebas automatizadas comprueban conservación de originales y estados pendientes, rechazo de imagen/vídeo alterados, duplicados, caja inválida, timestamp incorrecto, comprobación sin escritura y protección de destinos existentes o fuera de data/review. No evalúan nitidez ni duplicados visuales entre clips editados.
+
+CVAT usará clase nox y atributos de revisión visibility/support. Conservar exportación CVAT con atributos además de YOLO, que no los conserva. La clasificación de claridad y soporte no se aprende automáticamente con una clase de detector. Pendientes: revisar condiciones de uso antes de carga externa, crear la tarea de anotación, revisar cajas/claridad y ampliar ejemplos. No se subió contenido a CVAT, no se entrenó y el piloto no acredita suficiencia del dataset. La adopción de licencia, configuración y prueba de recursos de entrenamiento siguen pendientes.
+
+## 17. Primera exportación de anotaciones CVAT guardada
+
+El 22/10/2026 el usuario informa de que revisó y guardó sus anotaciones. Exportó el trabajo 4626112 en formato CVAT for images 1.1 sin imágenes, después de resolver el aviso de upgrade por incluirlas. Autoriza expresamente la descarga y guardado local.
+
+Se conserva el ZIP original, annotations.xml, verification.json y README.md en data/review/nox-cvat-pilot-2026-10-21/exports/2026-10-22-job-4626112. Se verificaron integridad del ZIP, referencias a tres imágenes originales, hashes/dimensiones, cuatro cajas dentro de límites y valores de clase/atributos. La copia de Descargas se conserva. No se modificaron las anotaciones ni review-decisions.json.
+
+Resultado exportado: N01 tiene una caja clear/clothing; N02 tiene una pending/unknown y otra possible/paddle; N03 tiene una possible/clothing. La segunda caja de N02 corresponde visualmente al logo de espalda de la camiseta, por lo que debe revisarse support con el usuario. También queda pendiente revisar la primera caja de N02. La validación estructural pasa; la revisión semántica sigue abierta. No hay conversión a YOLO, particiones ni entrenamiento. Tres imágenes siguen siendo un piloto.
+
+## 18. Revisión CVAT, respaldo y ampliación local — 23/10/2026
+
+El usuario delega las correcciones de atributos. Se registra el resultado y sus límites en [la revisión del 23](cvat-review-2026-10-23.md). Exportación nueva verificada: tres imágenes, cuatro cajas, hashes/dimensiones correctos, coordenadas conservadas y atributos esperados. Se inspeccionaron los PNG originales. N01 y espalda N02 quedan claras; pala N02 pendiente; N03 posible. No se generaron etiquetas de entrenamiento.
+
+Se prepara un lote local de doce candidatos de cinco vídeos con originales intactos, ZIP y procedencia; no hay positivos/negativos aprobados ni particiones. Las escenas compartidas y las condiciones del material siguen pendientes. Se añaden scripts reproducibles para preservar/verificar la exportación y reconstruir esta selección. Los medios y XML quedan bajo data/review, excluido de Git. Siguiente paso: revisar y anotar las doce imágenes antes de entrenar.
