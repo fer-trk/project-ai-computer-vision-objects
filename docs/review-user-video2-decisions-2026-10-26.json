@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-26",
+  "reviewer": "assistant_under_user_delegation",
+  "method": "13 full-resolution originals inspected; additional native detail crops inspected at 10,12,25,54,56 seconds. No enhancement or generated details.",
+  "coordinate_convention": "xyxy integer original pixels, right/bottom exclusive",
+  "source_manifest": "data/review/user-video2-moments-2026-10-26/manifest.json",
+  "clear_frames": 5,
+  "new_clear_frames": 4,
+  "duplicate_clear_frames": 1,
+  "hold_frames": 7,
+  "non_target_cut_frames": 1,
+  "independence": "Wide rally and two close-up segments of one video; not five independent evaluation sources. Shared event/scenes across videos still require grouping.",
+  "training_ready": false,
+  "negative_labels_created": false,
+  "examples": [
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T01_frame_000075.png",
+      "image_sha256": "d0954a670e5de9148cab88b7f89e490658f301b86f7c88ca1a07be8cc588e390",
+      "frame_index": 75,
+      "requested_seconds": 3,
+      "reference_seconds": 3.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Potential lower-back target is cut off at the left image boundary; do not approve a clear full-logo box.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T02_frame_000250.png",
+      "image_sha256": "e43dda2d530e79081554167d29a61119d9b214ed0707c313f6121b9d706ac681",
+      "frame_index": 250,
+      "requested_seconds": 10,
+      "reference_seconds": 10.0,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            497,
+            1331,
+            538,
+            1373
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "lower_back"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_video_wide_rally"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T03_frame_000300.png",
+      "image_sha256": "3ea6e3284ed6b82a05ee90e377630a9b1474ac9165211f448d1395842cfaf7be",
+      "frame_index": 300,
+      "requested_seconds": 12,
+      "reference_seconds": 12.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Back mark is strongly blurred by movement; possible, not negative.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T04_frame_000475.png",
+      "image_sha256": "7ebb711427de92a42a062df073cc8a817ad270f2ce99767a6436bc752c697c22",
+      "frame_index": 475,
+      "requested_seconds": 19,
+      "reference_seconds": 19.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Only a small paddle graphic is visible near the left boundary; variant and identity not secure.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T05_frame_000525.png",
+      "image_sha256": "678b6a49985380aa72380ead0b51ff1551b37a869ca7fcc7c4a2e80c0e35b19b",
+      "frame_index": 525,
+      "requested_seconds": 21,
+      "reference_seconds": 21.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Side/front clothing and paddle at small size; no secure visible NOX region at this exact instant.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T06_frame_000575.png",
+      "image_sha256": "638b550383c724c3d0b71802eb782e134e6b82bf0b3d63185e4ded77420be3a4",
+      "frame_index": 575,
+      "requested_seconds": 23,
+      "reference_seconds": 23.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Visible red-shirt back has other branding; the potential NOX subject is outside the view at this instant. Do not turn user guidance into a positive box.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T07_frame_000625.png",
+      "image_sha256": "fa4374e02867e0e9015a4f6acbb0dc32c870dac1d5147df8428e6d33b6489210",
+      "frame_index": 625,
+      "requested_seconds": 25,
+      "reference_seconds": 25.0,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            45,
+            1028,
+            99,
+            1054
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "lower_back"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_video_wide_rally"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T08_frame_000875.png",
+      "image_sha256": "ab365484aecc85475002124ba682b54a6d8185eea70c2f6b816e57405cd1da8b",
+      "frame_index": 875,
+      "requested_seconds": 35,
+      "reference_seconds": 35.0,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            560,
+            1203,
+            615,
+            1237
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": "E08",
+      "decision": "clear_positive",
+      "scene_group": "same_video_closeup_35"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T09_frame_001200.png",
+      "image_sha256": "c76acc2598946e52ee992ba97ebfce08d124ce9af127036114740f401444c0dc",
+      "frame_index": 1200,
+      "requested_seconds": 48,
+      "reference_seconds": 48.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "reason": "Close-up lower-back logo is partly cut off and blurred; possible, not negative.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T10_frame_001325.png",
+      "image_sha256": "29801a1ab5bce55c8ad8f4a08501a2ca3eb7567bedd83c7612f656f9e3d43607",
+      "frame_index": 1325,
+      "requested_seconds": 53,
+      "reference_seconds": 53.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "exclude_non_target_cut",
+      "reason": "Exact frame shows audience rather than a player. No visible NOX found; exclude this non-target cut from this positive selection.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T11_frame_001350.png",
+      "image_sha256": "c86ad9072e851ffa06bafe420fc1d372249cb4d2f66f8abd8b5de050dc3883d2",
+      "frame_index": 1350,
+      "requested_seconds": 54,
+      "reference_seconds": 54.0,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            689,
+            1368,
+            746,
+            1393
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_video_closeup_54_to_56"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T12_frame_001375.png",
+      "image_sha256": "a6d1b87fb3f979f580c17e1df30b35e0f9289f9f354956db9b2116d661d1f252",
+      "frame_index": 1375,
+      "requested_seconds": 55,
+      "reference_seconds": 55.0,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": "E10",
+      "decision": "hold_for_review",
+      "reason": "Previously reviewed E10. Chest/paddle remain blurred; user-selected time alone does not resolve clarity. Keep the previous ambiguous status.",
+      "scene_group": "same_source_pending_origin_grouping"
+    },
+    {
+      "video_id": "7697683756945280279",
+      "video_sha256": "71616825f034510b961ef4ba5e38676d154dce28c28ce03659a17aa4256ad6aa",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T13_frame_001400.png",
+      "image_sha256": "59eb69008abdba8464fccf1927199fbb5dce7928813ee6d09d7aebf9541d5b85",
+      "frame_index": 1400,
+      "requested_seconds": 56,
+      "reference_seconds": 56.0,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            402,
+            1264,
+            462,
+            1294
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_video_closeup_54_to_56"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "user_selected_moments_pending_native_frame_review",
+  "run_name": "user-video2-moments-2026-10-26",
+  "title": "# Segundo vídeo: instantes seleccionados por el usuario — 26/10/2026",
+  "basis": "User selected 3,10,12,19,21,23,25,35,48 seconds and interval 53–56 seconds. One sample per second within the interval; not continuous approved exposure. Support was not specified and requires visual review.",
+  "videos": {
+    "7697683756945280279": {
+      "requested_seconds": [3,10,12,19,21,23,25,35,48,53,54,55,56],
+      "reported_support": "unspecified",
+      "known_previous_reviews": {"35":"E08 clear chest", "55":"E10 ambiguous chest/paddle"}
+    }
+  }
+}

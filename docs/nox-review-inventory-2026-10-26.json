@@ -1,0 +1,501 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-26",
+  "unique_reviewed_images": 40,
+  "images_with_clear_box": 14,
+  "review_status_counts": {
+    "positive_without_recorded_ambiguity": 13,
+    "held_or_excluded": 22,
+    "reviewed_negative": 5
+  },
+  "video_count": 5,
+  "training_ready": false,
+  "splits_created": false,
+  "limits": "Review inventory only, not an approved training selection. Positive counts require no recorded ambiguous region in the same image. Clips may share shots or match origin; independent groups are not yet validated. Some held entries represent off-screen targets or non-target cuts rather than ambiguous NOX.",
+  "images": [
+    {
+      "image_sha256": "b0cee8f744554aa97bcf252f42f2d9dd39ca010099644193764521dc2c8a7e90",
+      "video_id": "7695444675531951382",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E01_7695444675531951382_f000875.png",
+      "review_sources": [
+        "expansion_2026-10-23:E01"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "b9763220d7f93c91fdbebb9f1cca650ee48230ebb05b43ba2c10e70e59e851b1",
+      "video_id": "7695444675531951382",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E02_7695444675531951382_f001225.png",
+      "review_sources": [
+        "expansion_2026-10-23:E02"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": true,
+      "review_status": "reviewed_negative"
+    },
+    {
+      "image_sha256": "244c1944d7025caadecb115831ddb37d513729b5818b12399dd5068ddaa00e11",
+      "video_id": "7695453226648292630",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E05_7695453226648292630_f000675.png",
+      "review_sources": [
+        "expansion_2026-10-23:E05"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "555ff2c288e6643b0f4ff20e7d90cda8bfa6f8ac1df93373a10af55ef6ea819d",
+      "video_id": "7695453226648292630",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E03_7695453226648292630_f000350.png",
+      "review_sources": [
+        "expansion_2026-10-23:E03"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "f3613f595620b4476b524da43c544745514659cc4d66719329229af133de688f",
+      "video_id": "7695453226648292630",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E04_7695453226648292630_f000575.png",
+      "review_sources": [
+        "expansion_2026-10-23:E04"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": true,
+      "review_status": "reviewed_negative"
+    },
+    {
+      "image_sha256": "017b5348045c9c98c59d3dd40196b36046ead9ad457e0865a2817389b8603201",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/player-moments-2026-10-21/frames/7697671396830317846/T03_frame_000725.png",
+      "review_sources": [
+        "cvat_pilot_2026-10-23:N01",
+        "review-user-moments-decisions-2026-10-26.json:29.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "034f95edfc75e1b953af26d5fac84050c149cba7acd21a1ea2897e8b4b3dcc8c",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T05_frame_000400.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:16.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "0971bde866523153afa8f927d4eabac6f74aae724d9295ecc87a5f6e9e9e5ecf",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T10_frame_000775.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:31.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "14e241500e792a7c7fddb06c0c4e959480245a0e4dfa56893618358d486f828b",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T11_frame_000800.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:32.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "1bcc5a80ca31d43f837cc3bd16b31a45d93cfed3a327f4bd7388b2fcccd1b894",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T01_frame_000025.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:1.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "4f099ab5c2ce6b3fbb1ffbc8d52d65c694cd34c052965107ed48d919e58f73bc",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T15_frame_000418.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:16.72"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "5322bf568303bee35e1ee7de3ca2353c1fa9339bd69f89f65361115127a4e270",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T09_frame_000750.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:30.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "5dd0355fffa5caa7333a55b48e4a31f46cb48eecb43b44355677c16a5b1e5d5d",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T02_frame_000050.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:2.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "6906c3834bffef8b51f653ed41c81a2480ce107f69a71e34af01eecdf7b40d5e",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T03_frame_000043.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:1.72"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "83ba53063a2bf08218d3405992e5ba843df03cf627ce89dcf0f199e8fe5656d0",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T20_frame_000712.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:28.48"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "83db8da6f939bcc88d9278ed1caf40d642012942fa66169513abe210a6079a68",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T07_frame_000700.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:28.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "85a150ea55ea6cd1d9e19c047f4a6b1fdeb13191acc4846cf24cc0b311c23164",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E06_7697671396830317846_f000625.png",
+      "review_sources": [
+        "expansion_2026-10-23:E06",
+        "review-user-moments-decisions-2026-10-26.json:25.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "8e87f290ccae1991e71d40207c434f1875d17c4bfe5207fcc27f4c5b822bbde2",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T14_frame_000412.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:16.48"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "993e0414ce343c895e69d916e3af0179492a997ee1a998eaae46039099ed1216",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T12_frame_000825.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:33.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "bcb30588edaeade499874178bd6cceb36c0e07521d1429bab117007ffef5622d",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T03_frame_000225.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:9.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "dff5e0fe88b64249d30d82ce290e52011d9bbae9493987e03d34da98ff42431d",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T04_frame_000325.png",
+      "review_sources": [
+        "review-user-moments-decisions-2026-10-26.json:13.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "e2c0a82a942808625f25bef0e3c12d7197aa925f7d0e5f9f266dcc2c11c2eb38",
+      "video_id": "7697671396830317846",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E07_7697671396830317846_f000675.png",
+      "review_sources": [
+        "expansion_2026-10-23:E07"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": true,
+      "review_status": "reviewed_negative"
+    },
+    {
+      "image_sha256": "29801a1ab5bce55c8ad8f4a08501a2ca3eb7567bedd83c7612f656f9e3d43607",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T10_frame_001325.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:53.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "3ea6e3284ed6b82a05ee90e377630a9b1474ac9165211f448d1395842cfaf7be",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T03_frame_000300.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:12.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "59eb69008abdba8464fccf1927199fbb5dce7928813ee6d09d7aebf9541d5b85",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T13_frame_001400.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:56.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "638b550383c724c3d0b71802eb782e134e6b82bf0b3d63185e4ded77420be3a4",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T06_frame_000575.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:23.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "678b6a49985380aa72380ead0b51ff1551b37a869ca7fcc7c4a2e80c0e35b19b",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T05_frame_000525.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:21.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "7ebb711427de92a42a062df073cc8a817ad270f2ce99767a6436bc752c697c22",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T04_frame_000475.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:19.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "a6d1b87fb3f979f580c17e1df30b35e0f9289f9f354956db9b2116d661d1f252",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E10_7697683756945280279_f001375.png",
+      "review_sources": [
+        "expansion_2026-10-23:E10",
+        "review-user-video2-decisions-2026-10-26.json:55.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "ab365484aecc85475002124ba682b54a6d8185eea70c2f6b816e57405cd1da8b",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E08_7697683756945280279_f000875.png",
+      "review_sources": [
+        "expansion_2026-10-23:E08",
+        "review-user-video2-decisions-2026-10-26.json:35.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "c76acc2598946e52ee992ba97ebfce08d124ce9af127036114740f401444c0dc",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T09_frame_001200.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:48.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "c86ad9072e851ffa06bafe420fc1d372249cb4d2f66f8abd8b5de050dc3883d2",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T11_frame_001350.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:54.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "d0954a670e5de9148cab88b7f89e490658f301b86f7c88ca1a07be8cc588e390",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T01_frame_000075.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:3.0"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "e43dda2d530e79081554167d29a61119d9b214ed0707c313f6121b9d706ac681",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T02_frame_000250.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:10.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "ee1b65095109c8233612373c9b332b9e7c0fedf54d8469992d7de6f0a4c1e656",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E09_7697683756945280279_f001175.png",
+      "review_sources": [
+        "expansion_2026-10-23:E09"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": true,
+      "review_status": "reviewed_negative"
+    },
+    {
+      "image_sha256": "fa4374e02867e0e9015a4f6acbb0dc32c870dac1d5147df8428e6d33b6489210",
+      "video_id": "7697683756945280279",
+      "source_image": "data/review/user-video2-moments-2026-10-26/frames/7697683756945280279/T07_frame_000625.png",
+      "review_sources": [
+        "review-user-video2-decisions-2026-10-26.json:25.0"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": false,
+      "reviewed_negative": false,
+      "review_status": "positive_without_recorded_ambiguity"
+    },
+    {
+      "image_sha256": "3cb4f8dfd19cab5947be6ecc7eeb84a0bbfa2a0ec90c4a7306603bdf79fc26c3",
+      "video_id": "7698076371569888534",
+      "source_image": "data/review/targeted-2026-10-21/frames/7698076371569888534/T06_frame_000575.png",
+      "review_sources": [
+        "cvat_pilot_2026-10-23:N02"
+      ],
+      "clear_box_count": 1,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "3d9590316fc24328d6e9b9a447d03db4114ad44a3cee8248cbf0fa876757e73a",
+      "video_id": "7698076371569888534",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E12_7698076371569888534_f000925.png",
+      "review_sources": [
+        "expansion_2026-10-23:E12"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "4b82fcb903a6cd77c43c3fedb62f5e6ae495e871e98498cfef4ccaa01999ee36",
+      "video_id": "7698076371569888534",
+      "source_image": "data/review/targeted-2026-10-21/frames/7698076371569888534/T05_frame_000525.png",
+      "review_sources": [
+        "cvat_pilot_2026-10-23:N03"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": true,
+      "reviewed_negative": false,
+      "review_status": "held_or_excluded"
+    },
+    {
+      "image_sha256": "b4333f1ed865003d43c1ce3b8cd6cb40610a250bbc5472c54339d4f913bd55cd",
+      "video_id": "7698076371569888534",
+      "source_image": "data/review/nox-expansion-2026-10-23/images/E11_7698076371569888534_f000425.png",
+      "review_sources": [
+        "expansion_2026-10-23:E11"
+      ],
+      "clear_box_count": 0,
+      "ambiguous_region": false,
+      "reviewed_negative": true,
+      "review_status": "reviewed_negative"
+    }
+  ]
+}
