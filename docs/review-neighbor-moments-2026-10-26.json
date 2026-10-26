@@ -1,0 +1,11 @@
+{
+  "status": "adjacent_candidates_for_user_timestamp_matching_not_approved_labels",
+  "run_name": "user-moments-neighbors-2026-10-26",
+  "title": "# Comprobación de vecinos de instantes seleccionados",
+  "basis": "Whole-second references may point to later frames within that second. Sample offsets 0.24, 0.48 and 0.72 seconds; keep exact original timestamps separately.",
+  "videos": {
+    "7697671396830317846": {
+      "requested_seconds": [1.24,1.48,1.72,2.24,2.48,2.72,9.24,9.48,9.72,13.24,13.48,13.72,16.24,16.48,16.72,25.24,25.48,25.72,28.24,28.48,28.72]
+    }
+  }
+}

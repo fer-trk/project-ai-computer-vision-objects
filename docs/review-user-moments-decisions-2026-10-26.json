@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-26",
+  "reviewer": "assistant_under_user_delegation",
+  "scope": "12 exact-time frames and four adjacent frames inspected at native resolution. Another 17 adjacent candidates only scanned on a contact sheet; no annotation decision on those.",
+  "user_support_selection": "Paddle at 9 and 25 s; clothing at 1, 2, 13, 16 and 28–33 s. This records user guidance separately from native-frame clarity.",
+  "coordinate_convention": "xyxy pixels, right and bottom exclusive",
+  "reviewed_frames": 16,
+  "clear_frames": 7,
+  "clear_frames_new_to_previous_reviews": 6,
+  "independence": "Six close-up frames belong to one continuous shot. The seventh is a wide view of the same video/rally; not seven independent evaluation scenes. Do not split this source across training and test without approved origin grouping.",
+  "training_ready": false,
+  "paddle_positive_count": 0,
+  "reference_consulted": "https://noxsport.com/en/collections/palas-del-mozart-de-catamarca-2025/products/racket-at10-genius-12k-by-agustin-tapia",
+  "reference_limit": "Official product description consulted; product photos were not visually matched. Model/player association alone does not validate the paddle graphic region.",
+  "examples": [
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T01_frame_000025.png",
+      "image_sha256": "1bcc5a80ca31d43f837cc3bd16b31a45d93cfed3a327f4bd7388b2fcccd1b894",
+      "frame_index": 25,
+      "reference_seconds": 1.0,
+      "requested_seconds": 1,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Target player is outside the sampled view at exact 1 s; adjacent 1.72 s retained instead."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T02_frame_000050.png",
+      "image_sha256": "5dd0355fffa5caa7333a55b48e4a31f46cb48eecb43b44355677c16a5b1e5d5d",
+      "frame_index": 50,
+      "reference_seconds": 2.0,
+      "requested_seconds": 2,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Small moving lower-back mark: possible; not a negative."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T03_frame_000225.png",
+      "image_sha256": "bcb30588edaeade499874178bd6cceb36c0e07521d1429bab117007ffef5622d",
+      "frame_index": 225,
+      "reference_seconds": 9.0,
+      "requested_seconds": 9,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "User identifies paddle. Native frame shows a graphic shape, but the NOX graphic variant needs a verified visual reference; not an approved positive or negative."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T04_frame_000325.png",
+      "image_sha256": "dff5e0fe88b64249d30d82ce290e52011d9bbae9493987e03d34da98ff42431d",
+      "frame_index": 325,
+      "reference_seconds": 13.0,
+      "requested_seconds": 13,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Small motion-blurred lower-back candidate; possible, not a negative."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T05_frame_000400.png",
+      "image_sha256": "034f95edfc75e1b953af26d5fac84050c149cba7acd21a1ea2897e8b4b3dcc8c",
+      "frame_index": 400,
+      "reference_seconds": 16.0,
+      "requested_seconds": 16,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Exact 16 s is a wide view. Adjacent 16.48/16.72 s close-ups inspected separately."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T06_frame_000625.png",
+      "image_sha256": "85a150ea55ea6cd1d9e19c047f4a6b1fdeb13191acc4846cf24cc0b311c23164",
+      "frame_index": 625,
+      "reference_seconds": 25.0,
+      "requested_seconds": 25,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": "E06",
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Same frame as earlier E06. User identifies paddle rather than back. Paddle graphic retained pending variant review; back remains blurred. Do not count as a new source frame."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T07_frame_000700.png",
+      "image_sha256": "83db8da6f939bcc88d9278ed1caf40d642012942fa66169513abe210a6079a68",
+      "frame_index": 700,
+      "reference_seconds": 28.0,
+      "requested_seconds": 28,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Exact 28 s shows another shirt with different branding; user interval contains a cut. NOX chest appears at 28.48 s."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T08_frame_000725.png",
+      "image_sha256": "017b5348045c9c98c59d3dd40196b36046ead9ad457e0865a2817389b8603201",
+      "frame_index": 725,
+      "reference_seconds": 29.0,
+      "requested_seconds": 29,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            610,
+            1558,
+            714,
+            1619
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": "N01",
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T09_frame_000750.png",
+      "image_sha256": "5322bf568303bee35e1ee7de3ca2353c1fa9339bd69f89f65361115127a4e270",
+      "frame_index": 750,
+      "reference_seconds": 30.0,
+      "requested_seconds": 30,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            638,
+            1426,
+            725,
+            1476
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T10_frame_000775.png",
+      "image_sha256": "0971bde866523153afa8f927d4eabac6f74aae724d9295ecc87a5f6e9e9e5ecf",
+      "frame_index": 775,
+      "reference_seconds": 31.0,
+      "requested_seconds": 31,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            815,
+            1412,
+            920,
+            1458
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T11_frame_000800.png",
+      "image_sha256": "14e241500e792a7c7fddb06c0c4e959480245a0e4dfa56893618358d486f828b",
+      "frame_index": 800,
+      "reference_seconds": 32.0,
+      "requested_seconds": 32,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            916,
+            1545,
+            1038,
+            1593
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-2026-10-26/frames/7697671396830317846/T12_frame_000825.png",
+      "image_sha256": "993e0414ce343c895e69d916e3af0179492a997ee1a998eaae46039099ed1216",
+      "frame_index": 825,
+      "reference_seconds": 33.0,
+      "requested_seconds": 33,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            881,
+            1474,
+            1022,
+            1518
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T03_frame_000043.png",
+      "image_sha256": "6906c3834bffef8b51f653ed41c81a2480ce107f69a71e34af01eecdf7b40d5e",
+      "frame_index": 43,
+      "reference_seconds": 1.72,
+      "requested_seconds": 1.72,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            99,
+            1275,
+            151,
+            1302
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "lower_back"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_rally_wide_view"
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T14_frame_000412.png",
+      "image_sha256": "8e87f290ccae1991e71d40207c434f1875d17c4bfe5207fcc27f4c5b822bbde2",
+      "frame_index": 412,
+      "reference_seconds": 16.48,
+      "requested_seconds": 16.48,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Chest wordmark remains blurred at native scale; retain possible case rather than clear-positive label."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T15_frame_000418.png",
+      "image_sha256": "4f099ab5c2ce6b3fbb1ffbc8d52d65c694cd34c052965107ed48d919e58f73bc",
+      "frame_index": 418,
+      "reference_seconds": 16.72,
+      "requested_seconds": 16.72,
+      "split": null,
+      "boxes": [],
+      "duplicate_of": null,
+      "decision": "hold_for_review",
+      "scene_group": "same_source_video_pending_grouping",
+      "reason": "Chest wordmark remains blurred at native scale; retain possible case rather than clear-positive label."
+    },
+    {
+      "video_id": "7697671396830317846",
+      "video_sha256": "de3956f3dbada513a3060918d9798707003b8ce88976535b7b232dfdd1053d57",
+      "source_image": "data/review/user-moments-neighbors-2026-10-26/frames/7697671396830317846/T20_frame_000712.png",
+      "image_sha256": "83ba53063a2bf08218d3405992e5ba843df03cf627ce89dcf0f199e8fe5656d0",
+      "frame_index": 712,
+      "reference_seconds": 28.48,
+      "requested_seconds": 28.48,
+      "split": null,
+      "boxes": [
+        {
+          "label": "nox",
+          "bbox_xyxy": [
+            625,
+            1568,
+            705,
+            1608
+          ],
+          "visibility": "clear",
+          "support": "clothing",
+          "placement": "chest"
+        }
+      ],
+      "duplicate_of": null,
+      "decision": "clear_positive",
+      "scene_group": "same_closeup_28_to_33"
+    }
+  ]
+}

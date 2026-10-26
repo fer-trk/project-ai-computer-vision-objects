@@ -1,0 +1,13 @@
+{
+  "status": "user_selected_moments_pending_native_frame_review",
+  "run_name": "user-moments-2026-10-26",
+  "title": "# Instantes NOX seleccionados por el usuario — 26/10/2026",
+  "basis": "User selected 1, 2, 9, 13, 16, 25 seconds and the 28–33 second interval, supported by seven screenshots. The interval is sampled once per second, not interpreted as continuous confirmed exposure.",
+  "videos": {
+    "7697671396830317846": {
+      "requested_seconds": [1, 2, 9, 13, 16, 25, 28, 29, 30, 31, 32, 33],
+      "reported_support_by_second": {"1":"clothing", "2":"clothing", "9":"paddle", "13":"clothing", "16":"clothing", "25":"paddle", "28":"clothing", "29":"clothing", "30":"clothing", "31":"clothing", "32":"clothing", "33":"clothing"},
+      "interpretation": "User identification guides review; final box coordinates, clarity, additional logos and independence of scenes require inspection. Second 25 was previously ambiguous in E06 for clothing; inspect paddle separately. Second 29 was already reviewed in N01; do not count it as a new source frame."
+    }
+  }
+}
