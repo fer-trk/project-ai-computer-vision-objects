@@ -12,11 +12,14 @@ actuales del repositorio en Windows usando Git Bash y Python 3.11.
 
 ### Instalación
 
-Clona el repositorio y entra en su carpeta:
+Clona el repositorio, entra en su carpeta y selecciona la rama que contiene
+`requirements-tools.txt` y `tests/` (la rama por defecto, `main`, aún no los
+incluye):
 
 ```bash
 git clone https://github.com/fer-trk/project-ai-computer-vision-objects.git
 cd project-ai-computer-vision-objects
+git switch docs/project-specifications
 ```
 
 Comprueba Python, crea el entorno virtual, actívalo y actualiza `pip`:
