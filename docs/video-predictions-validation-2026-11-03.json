@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-03T12:56:46.230724+00:00",
+  "complete": true,
+  "experimental": true,
+  "model_accepted": false,
+  "source": {
+    "name": "7700661233569041687.mp4",
+    "sha256": "e3960df53d86d5823810ac95b9ac7d509eecd6c4e46f90daeb4de283aa210f0b",
+    "width": 1080,
+    "height": 1920,
+    "duration_seconds": 7.166667,
+    "duration_source": "video_stream",
+    "average_frame_rate": "30/1",
+    "declared_frame_count": "215"
+  },
+  "model": {
+    "name": "nox-full-112639-best.pt",
+    "sha256": "b69c4a576d62a464ba9f27f3754e7a6df90ced79afd7e87b93f8dd22fbbfa171",
+    "names": {
+      "0": "nox_texto"
+    }
+  },
+  "parameters": {
+    "confidence": 0.25,
+    "nms_iou": 0.7,
+    "image_size": 640,
+    "device": "cpu",
+    "frame_stride": 1,
+    "max_duration_seconds": 10.0,
+    "max_pixels": null
+  },
+  "frames_processed": 215,
+  "frames_with_detections": 82,
+  "detection_count": 107,
+  "last_timestamp_seconds": 7.133333,
+  "last_interval_seconds": 0.033333999999999975,
+  "inference_seconds": 34.808127200230956,
+  "elapsed_seconds": 62.33874779997859,
+  "output": {
+    "video": "annotated.mp4",
+    "audio": false,
+    "frames": "frames.jsonl",
+    "detections": "detections.csv",
+    "timing": "Source-relative PTS; VFR retained within 10 microseconds",
+    "verified_frames": 215
+  },
+  "exposure_measurement": "not_computed; detections unreviewed, support unknown",
+  "versions": {
+    "ultralytics": "8.4.189",
+    "torch": "2.11.0+cpu",
+    "torchvision": "0.26.0+cpu",
+    "Pillow": "13.0.0",
+    "numpy": "2.4.6",
+    "av": "16.1.0"
+  },
+  "validation": {
+    "unit_tests_passed": 42,
+    "new_video_tests_passed": 8,
+    "pip_check": "passed",
+    "jsonl_csv_report_match": true,
+    "ffprobe_output_duration_seconds": 7.166667,
+    "ffprobe_output_frames": 215,
+    "visual_inspection": "First annotated source frame inspected; not a frame-by-frame quality evaluation",
+    "limitations": [
+      "Demo video has a frame included in training; not an independent evaluation",
+      "Source audio is not copied",
+      "Labels can overlap in crowded frames",
+      "Peak memory and end-to-end GPU throughput not measured",
+      "No exposure or support classification; detector quality still not accepted"
+    ]
+  }
+}
