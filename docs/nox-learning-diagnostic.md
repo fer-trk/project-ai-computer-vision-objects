@@ -43,3 +43,24 @@ Si aprende la muestra, revisar después generalización y configuración complet
 si falla, inspeccionar pérdidas, inicialización/cabeza, gradientes y carga real
 antes de ampliar datos o ensayar más combinaciones. No modificar cajas aprobadas
 solo porque una predicción sea errónea.
+
+## Resultado del diagnóstico 110615 y siguiente ejecución
+
+El 03/11/2026 se recibió el cuaderno ejecutado y el ZIP
+`nox-fit-20261103-110615-results.zip` (SHA-256
+`19a4e3d215d23512657d7796efb56d5dbdf8973ecf37bc4de29490161015140f`).
+Siete celdas 1–7, código intacto y sin errores; CRC y hashes de muestra correctos.
+80 épocas, 100,54 s de llamada. last.pt SHA-256
+`8392cbee815733eeb9465f079ef974701bf070a94bcbc79f4a30f670956fdaba`.
+
+Resultado a confianza 0,25 / IoU 0,50: TP=4, FP=0, FN=0; negativo sin detecciones.
+IoU de las cuatro cajas: 0,9762 / 0,9625 / 0,9751 / 0,9801. Se inspeccionaron las
+vistas positiva con dos cajas y negativa. El proceso consigue aprender la muestra;
+no se demuestra generalización ni se identifica un único cambio causal.
+
+Siguiente cuaderno listo: `notebooks/nox_full_training.ipynb`. Reutiliza el dataset
+original 19/3/1 y las celdas verificadas de integridad/evaluación. Entrena desde
+checkpoint oficial fresco con 80 épocas, patience=0, batch=nbs=2, Adam lr=0,001
+constante y sin aumentos; val separado, selección de best.pt y test exploratorio.
+Validación local: esquema, sintaxis, configuración ejecutada y API; ejecución GPU
+real pendiente. No se modifican etiquetas ni se incorpora la muestra al val/test.
