@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-03",
+  "scope": "Local web application only; online publication postponed by user",
+  "stack": {
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "python_multipart": "0.0.33",
+    "database": "SQLite",
+    "frontend": "HTML/CSS/JavaScript; no external assets"
+  },
+  "checks": {
+    "unit_tests_passed": 53,
+    "new_application_tests": 11,
+    "pip_check": "passed",
+    "browser_upload_processed": true,
+    "browser_video_decoded": true,
+    "browser_seek_verified_seconds": 2.9844,
+    "browser_csv_download": true,
+    "restart_retained_completed_job_and_107_sqlite_detections": true
+  },
+  "real_job": {
+    "source": "7700661233569041687.mp4",
+    "checkpoint_sha256": "b69c4a576d62a464ba9f27f3754e7a6df90ced79afd7e87b93f8dd22fbbfa171",
+    "duration_seconds": 7.166667,
+    "frames_processed": 215,
+    "detections": 107,
+    "elapsed_analysis_seconds": 70.36228389991447,
+    "confidence": 0.25,
+    "independent_evaluation": false
+  },
+  "limits": {
+    "upload_bytes": 104857600,
+    "duration_seconds": 60,
+    "pixels": 2073600,
+    "concurrent_analyses": 1,
+    "worker_timeout_seconds": 900,
+    "status": "Initial configurable local-development limits, not final product acceptance"
+  },
+  "limitations": [
+    "Detector quality is still unaccepted; proposals are unreviewed",
+    "No exposure calculation or support/clarity classification",
+    "No detection crops; partial persistence capability only",
+    "Annotated video is silent",
+    "No public hosting; no production authentication",
+    "Swagger docs require external CDN, application UI does not"
+  ]
+}
