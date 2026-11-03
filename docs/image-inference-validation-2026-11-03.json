@@ -1,0 +1,260 @@
+{
+  "date": "2026-11-03",
+  "status": "inference_tool_validated_detector_not_accepted",
+  "unit_tests_passed": 34,
+  "new_tests_passed": 10,
+  "pip_check": "No broken requirements found",
+  "runs": [
+    {
+      "run": "real-0",
+      "image": {
+        "filename": "7695444675531951382_b9763220d7f9.png",
+        "sha256": "b9763220d7f93c91fdbebb9f1cca650ee48230ebb05b43ba2c10e70e59e851b1",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 0.25,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 1,
+      "elapsed_model_seconds": 23.262050400022417,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 32,
+        "file": "annotated.png"
+      }
+    },
+    {
+      "run": "real-1",
+      "image": {
+        "filename": "7695453226648292630_244c1944d702.png",
+        "sha256": "244c1944d7025caadecb115831ddb37d513729b5818b12399dd5068ddaa00e11",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 0.25,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 1,
+      "elapsed_model_seconds": 0.6085529000265524,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 32,
+        "file": "annotated.png"
+      }
+    },
+    {
+      "run": "real-2",
+      "image": {
+        "filename": "7695453226648292630_f3613f595620.png",
+        "sha256": "f3613f595620b4476b524da43c544745514659cc4d66719329229af133de688f",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 0.25,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 3,
+      "elapsed_model_seconds": 0.5045818999642506,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 32,
+        "file": "annotated.png"
+      }
+    },
+    {
+      "run": "real-3",
+      "image": {
+        "filename": "T12_frame_000594.png",
+        "sha256": "a05b2ae98f49042712239146ca0ee54f7dbfc55d9dbedd32c3313a6bcc0cf76f",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 0.25,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 5,
+      "elapsed_model_seconds": 0.4962136000394821,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 32,
+        "file": "annotated.png"
+      }
+    },
+    {
+      "run": "cli-new-shirt",
+      "image": {
+        "filename": "T12_frame_000594.png",
+        "sha256": "a05b2ae98f49042712239146ca0ee54f7dbfc55d9dbedd32c3313a6bcc0cf76f",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 0.25,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 5,
+      "elapsed_model_seconds": 21.601238399976864,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 97,
+        "file": "annotated.png"
+      }
+    },
+    {
+      "run": "cli-no-detections",
+      "image": {
+        "filename": "T12_frame_000594.png",
+        "sha256": "a05b2ae98f49042712239146ca0ee54f7dbfc55d9dbedd32c3313a6bcc0cf76f",
+        "width": 1080,
+        "height": 1920,
+        "orientation": "exif_transposed",
+        "alpha_background": "white"
+      },
+      "model": {
+        "filename": "best.pt",
+        "sha256": "f667beed8ce6356f56d6468eea86b64927e8d56888712c1d73a9e304759fc570",
+        "class_names": {
+          "0": "nox"
+        }
+      },
+      "parameters": {
+        "confidence": 1.0,
+        "iou": 0.7,
+        "image_size": 640,
+        "device": "cpu",
+        "max_detections": 300
+      },
+      "detection_count": 0,
+      "elapsed_model_seconds": 10.498399600037374,
+      "versions": {
+        "ultralytics": "8.4.189",
+        "torch": "2.11.0+cpu",
+        "torchvision": "0.26.0+cpu",
+        "Pillow": "13.0.0",
+        "numpy": "2.4.6"
+      },
+      "export_consistency_verified": true,
+      "rendering": {
+        "header_pixels": 38,
+        "footer_pixels": 32,
+        "file": "annotated.png"
+      }
+    }
+  ],
+  "review": [
+    "Two historical negative images received 1 and 3 false proposals at confidence 0.25",
+    "Historical positive wristband image received an arm box instead of a tight logo box",
+    "New black-white shirt image received five proposals away from the clear chest logo; highest score about 0.994 is not evidence of accuracy",
+    "Initial four runs preceded the label-collision layout repair; final CLI runs verify the repaired layout and no-detections path"
+  ],
+  "limitations": [
+    "This is a functional smoke check, not an independent test evaluation",
+    "Old model has one class nox, not the two proposed variants",
+    "No training, label edits, media publication, exposure measurement, or cloud service"
+  ]
+}
