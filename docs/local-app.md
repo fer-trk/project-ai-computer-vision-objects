@@ -1,4 +1,4 @@
-# Aplicación local NOX
+# El Mozart · aplicación local NOX
 
 Bloque aprobado por Fernanda el 03/11/2026: aplicación local primero; publicación
 online aplazada. Reutiliza el análisis de vídeo existente. No se entrena un modelo
@@ -16,8 +16,9 @@ python -m venv .venv
 .\.venv\Scripts\python.exe scripts/serve_local.py --model "ruta/al/best.pt"
 ```
 
-Abrir `http://127.0.0.1:8000`. La interfaz y sus recursos se sirven desde el equipo;
-no usan CDN ni servicios externos. El visor Swagger opcional de `/docs` carga sus
+Abrir `http://127.0.0.1:8000`. La interfaz naranja y sus recursos se sirven desde el equipo;
+no usan CDN. Obtener un vídeo nuevo por enlace requiere conexión con TikTok.
+El visor Swagger opcional de `/docs` carga sus
 recursos desde CDN; el contrato `/openapi.json` siempre está disponible localmente.
 
 La instalación inicial requiere internet. La aplicación utiliza CPU y los pesos
@@ -28,14 +29,37 @@ queda registrado como fallido. Cerrar la pestaña del navegador no detiene el se
 
 ## Recorrido
 
-1. Seleccionar o arrastrar un vídeo. El umbral predeterminado 0,25 filtra propuestas;
-   se puede cambiar antes de subir. No se presenta como precisión ni claridad.
+1. Pegar un enlace público de vídeo de TikTok. También se admiten enlaces cortos
+   de TikTok; perfiles, directos, listas y dominios ajenos se rechazan.
+   Alternativamente, elegir **Desde mi equipo** y seleccionar o arrastrar un vídeo.
+   El umbral predeterminado 0,25 filtra propuestas; no representa precisión ni claridad.
 2. Iniciar análisis. La API responde 202 con ID; la pantalla consulta su estado.
 3. Revisar el MP4 anotado (sin audio), sus propuestas y el instante de cada una.
 4. Descargar MP4, CSV o informe JSON. Los casos sin propuestas son válidos y no
    demuestran ausencia de logos. Los errores se muestran sin inventar resultados.
 5. Volver al historial tras cerrar/reiniciar el servidor. Se muestran los 50 análisis
    más recientes; las propuestas se consultan en páginas de hasta 100 registros.
+
+## Vídeos de TikTok
+
+La API pasa por `queued`, `downloading`, `running` y `ready` o `failed`. `yt-dlp`
+obtiene una publicación pública, sin credenciales ni cookies del navegador, con
+límites de bytes, duración, resolución y 120 s para obtener el vídeo. Después se
+ejecuta el mismo procesamiento local de archivos. No identifica automáticamente
+a Agustín Tapia: analiza NOX en el vídeo elegido por la usuaria.
+
+Se conserva el enlace en SQLite y la procedencia en `source.json` y en el informe.
+`source-cache/<ID>.mp4` más `<ID>.json` permite reutilizar copias locales: antes de
+copiarlas se comprueban ID, límites y SHA-256. La pantalla indica cuándo se reutiliza
+una copia. Las descargas nuevas satisfactorias se guardan también en esta caché.
+La migración de SQLite conserva el historial previo y añade origen y enlace.
+
+TikTok puede rechazar la descarga. El 03/11/2026 el enlace de prueba fue rechazado
+con yt-dlp 2026.8.19 y 2026.10.26. Se muestra un error y se ofrece la subida del
+archivo; no se genera un análisis ficticio ni se solicita iniciar sesión. La prueba
+completa del formulario utilizó una copia local verificada de los nueve vídeos
+previamente descargados. Esto verifica el recorrido de análisis, no garantiza
+descargas futuras. El modo de archivo funciona sin internet tras instalar dependencias.
 
 ## Persistencia y límites
 
@@ -65,6 +89,7 @@ solo se sirven con ID válido, análisis terminado y un nombre de artefacto perm
 
 - `GET /api/config`: disponibilidad del modelo y límites.
 - `POST /api/analyses`: multipart `video` y `confidence`, crea análisis (202).
+- `POST /api/tiktok`: JSON `{"url":"https://www.tiktok.com/@usuario/video/ID","confidence":0.25}` (202).
 - `GET /api/analyses`: historial reciente.
 - `GET /api/analyses/{id}`: estado, error e informe.
 - `GET /api/analyses/{id}/detections?offset=0&limit=50`: propuestas persistidas.

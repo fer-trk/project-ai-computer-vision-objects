@@ -18,7 +18,9 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from filelock import FileLock, Timeout
+from pydantic import BaseModel, Field
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from scripts.download_tiktok import normalize_tiktok_url
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = Path(__file__).parent / 'static'
@@ -40,12 +42,15 @@ class Settings:
     max_duration_seconds: float = 60
     max_pixels: int = 2073600
     job_timeout_seconds: float = 900
+    download_timeout_seconds: float = 120
+    cache_dir: Path | None = None
 
     def __post_init__(self):
-        if min(self.max_upload_bytes, self.max_duration_seconds, self.max_pixels, self.job_timeout_seconds) <= 0:
+        if min(self.max_upload_bytes, self.max_duration_seconds, self.max_pixels, self.job_timeout_seconds, self.download_timeout_seconds) <= 0:
             raise ValueError('Los límites deben ser positivos')
         object.__setattr__(self, 'model', Path(self.model).resolve())
         object.__setattr__(self, 'data_dir', Path(self.data_dir).resolve())
+        object.__setattr__(self, 'cache_dir', Path(self.cache_dir).resolve() if self.cache_dir else self.data_dir/'source-cache')
 
 
 class Jobs:
@@ -94,7 +99,12 @@ class Jobs:
                         bbox TEXT NOT NULL, evidence_status TEXT NOT NULL, support TEXT NOT NULL);
                     CREATE INDEX IF NOT EXISTS detection_order ON detections(analysis_id, frame_index, detection_id);
                 ''')
-                db.execute("UPDATE analyses SET status='failed', error=?, updated_at=? WHERE status IN ('queued','running')",
+                columns = {row['name'] for row in db.execute('PRAGMA table_info(analyses)')}
+                if 'source_kind' not in columns:
+                    db.execute("ALTER TABLE analyses ADD COLUMN source_kind TEXT NOT NULL DEFAULT 'upload'")
+                if 'source_url' not in columns:
+                    db.execute('ALTER TABLE analyses ADD COLUMN source_url TEXT')
+                db.execute("UPDATE analyses SET status='failed', error=?, updated_at=? WHERE status IN ('queued','downloading','running')",
                            ('El análisis se interrumpió al cerrar la aplicación. Puedes volver a subir el vídeo.', utc_now()))
             self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='nox-analysis')
         except BaseException:
@@ -132,16 +142,16 @@ class Jobs:
             raise HTTPException(404, 'No existe este análisis')
         return self.public(row)
 
-    def submit(self, job_id, filename, confidence):
+    def submit(self, job_id, filename, confidence, source_url=None):
         with self.guard:
             if self.stop.is_set():
                 raise HTTPException(503, 'La aplicación se está cerrando')
             with self.connect() as db:
-                if db.execute("SELECT 1 FROM analyses WHERE status IN ('queued','running')").fetchone():
+                if db.execute("SELECT 1 FROM analyses WHERE status IN ('queued','downloading','running')").fetchone():
                     raise HTTPException(409, 'Ya hay un análisis en curso. Espera a que termine.')
                 now = utc_now()
-                db.execute('INSERT INTO analyses VALUES (?,?,?,?,?,?,?,?)',
-                           (job_id, filename, confidence, 'queued', now, now, None, None))
+                db.execute('INSERT INTO analyses (id,filename,confidence,status,created_at,updated_at,error,report,source_kind,source_url) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                           (job_id, filename, confidence, 'queued', now, now, None, None, 'tiktok' if source_url else 'upload', source_url))
             try:
                 self.executor.submit(self.execute, job_id)
             except RuntimeError:
@@ -182,27 +192,49 @@ class Jobs:
             message = str(error) if isinstance(error, ValueError) else 'No se pudo completar el análisis. Vuelve a intentarlo.'
             self.fail(job_id, message[:400])
 
-    @staticmethod
-    def run_process(job, settings, stop):
+    def run_process(self, job, settings, stop):
         folder = settings.data_dir / 'jobs' / job['id']
+        if job.get('source_url'):
+            with self.connect() as db:
+                db.execute("UPDATE analyses SET status='downloading',updated_at=? WHERE id=?", (utc_now(), job['id']))
+            self.run_command([sys.executable, str(ROOT/'scripts/download_tiktok.py'), '--url', job['source_url'],
+                '--directory', str(folder), '--max-bytes', str(settings.max_upload_bytes),
+                '--max-duration', str(settings.max_duration_seconds), '--max-pixels', str(settings.max_pixels),
+                '--cache-dir', str(settings.cache_dir)],
+                folder/'download.log', settings.download_timeout_seconds, stop)
+            source = json.loads((folder/'source.json').read_text(encoding='utf-8'))
+            title = ''.join(c for c in source['title'] if c.isprintable())[:160]
+            with self.connect() as db:
+                db.execute("UPDATE analyses SET status='running',filename=?,updated_at=? WHERE id=?",
+                           (title or 'Vídeo de TikTok', utc_now(), job['id']))
         command = [sys.executable, str(ROOT / 'scripts/predict_video.py'), str(folder / 'source.upload'),
                    '--model', str(settings.model), '--output', str(folder / 'result'),
                    '--confidence', str(job['confidence']), '--max-duration-seconds', str(settings.max_duration_seconds),
                    '--max-pixels', str(settings.max_pixels)]
+        self.run_command(command, folder/'worker.log', settings.job_timeout_seconds, stop)
+        if job.get('source_url'):
+            report_path = folder/'result/report.json'
+            report = json.loads(report_path.read_text(encoding='utf-8'))
+            report['source']['publication'] = source
+            report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+
+    @staticmethod
+    def run_command(command, log_path, timeout, stop):
         environment = dict(os.environ, PYTHONUTF8='1', YOLO_OFFLINE='true')
         flags = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
-        with (folder / 'worker.log').open('wb') as log:
+        with log_path.open('wb') as log:
             process = subprocess.Popen(command, stdout=log, stderr=log, env=environment, creationflags=flags)
             started = time.monotonic()
             try:
                 while process.poll() is None:
                     if stop.wait(.2):
                         raise ValueError('El análisis se interrumpió al cerrar la aplicación.')
-                    if time.monotonic() - started > settings.job_timeout_seconds:
+                    if time.monotonic() - started > timeout:
                         raise ValueError('Se alcanzó el tiempo máximo de análisis. Prueba con un vídeo más corto.')
                 if process.returncode:
-                    tail = (folder / 'worker.log').read_text(encoding='utf-8', errors='replace')[-6000:]
-                    messages = [line.split('Error de análisis:', 1)[1].strip() for line in tail.splitlines() if 'Error de análisis:' in line]
+                    tail = log_path.read_text(encoding='utf-8', errors='replace')[-6000:]
+                    messages = [line.split(prefix, 1)[1].strip() for line in tail.splitlines()
+                                for prefix in ('Error de análisis:', 'Error de TikTok:') if prefix in line]
                     raise ValueError(messages[-1] if messages else 'El archivo no pudo procesarse. Comprueba que sea un vídeo válido.')
             finally:
                 if process.poll() is None:
@@ -227,6 +259,11 @@ class Jobs:
         return dict(items=items, total=total, offset=offset, limit=limit)
 
 
+class TikTokInput(BaseModel):
+    url: str = Field(min_length=1, max_length=2048)
+    confidence: float = Field(default=.25, ge=0, le=1, allow_inf_nan=False)
+
+
 def create_app(settings, runner=None):
     """Serve a single-machine application with local-only defaults and persistent results."""
     jobs = Jobs(settings, runner)
@@ -240,7 +277,7 @@ def create_app(settings, runner=None):
         finally:
             jobs.close()
 
-    app = FastAPI(title='NOX · análisis local', version='0.1.0', lifespan=lifespan)
+    app = FastAPI(title='El Mozart · análisis NOX', version='0.2.0', lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=['127.0.0.1', 'localhost', '[::1]'])
 
     @app.middleware('http')
@@ -307,6 +344,26 @@ def create_app(settings, runner=None):
     @app.get('/api/analyses/{job_id}')
     def analysis(job_id: UUID):
         return jobs.get(str(job_id))
+
+    @app.post('/api/tiktok', status_code=202)
+    def tiktok(payload: TikTokInput):
+        if not settings.model.is_file():
+            raise HTTPException(503, 'El modelo no está disponible. Revisa la configuración de inicio.')
+        try:
+            url = normalize_tiktok_url(payload.url)
+        except ValueError as error:
+            raise HTTPException(422, str(error)) from error
+        job_id = str(uuid4())
+        folder = jobs.jobs_dir/job_id
+        folder.mkdir(exist_ok=False)
+        try:
+            return jobs.submit(job_id, 'Vídeo de TikTok', payload.confidence, source_url=url)
+        except BaseException:
+            with jobs.connect() as db:
+                exists = db.execute('SELECT 1 FROM analyses WHERE id=?', (job_id,)).fetchone()
+            if not exists:
+                jobs.cleanup_upload(folder)
+            raise
 
     @app.get('/api/analyses/{job_id}/detections')
     def detections(job_id: UUID, offset: int = 0, limit: int = 50):

@@ -1,7 +1,7 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
-const statusText = { queued: 'Pendiente', running: 'Procesando', ready: 'Listo para revisar', failed: 'No completado' };
-const state = { config: null, file: null, jobs: [], selected: null, renderKey: null, historyKey: null, offset: 0, total: 0, uploading: false };
+const statusText = { queued: 'Pendiente', downloading: 'Obteniendo vídeo', running: 'Procesando', ready: 'Listo para revisar', failed: 'No completado' };
+const state = { config: null, file: null, jobs: [], selected: null, renderKey: null, historyKey: null, offset: 0, total: 0, uploading: false, mode: 'link' };
 const number = (n) => new Intl.NumberFormat('es-ES').format(n);
 const seconds = (n) => `${Number(n).toLocaleString('es-ES', { maximumFractionDigits: 2 })} s`;
 function notify(message) { $('notification').textContent = message; $('notification').hidden = !message; }
@@ -12,10 +12,19 @@ async function api(url, options) {
   return data;
 }
 function updateButton() {
-  const busy = state.jobs.some((j) => ['queued', 'running'].includes(j.status));
-  $('analyze-button').disabled = state.uploading || busy || !state.file || !state.config?.model_available;
-  $('analyze-button').textContent = state.uploading ? 'Subiendo vídeo…' : busy ? 'Análisis en curso…' : 'Analizar vídeo ↗';
-  $('upload-hint').textContent = busy ? 'Un análisis a la vez. El estado se actualiza automáticamente.' : state.file ? 'Listo para analizar en este equipo.' : 'Selecciona un archivo para comenzar.';
+  const active = state.jobs.find((j) => ['queued', 'downloading', 'running'].includes(j.status));
+  const ready = state.mode === 'link' ? Boolean($('tiktok-url').value.trim()) : Boolean(state.file);
+  $('analyze-button').disabled = state.uploading || Boolean(active) || !ready || !state.config?.model_available;
+  $('analyze-button').textContent = state.uploading ? (state.mode === 'link' ? 'Preparando enlace…' : 'Subiendo vídeo…') : active ? statusText[active.status]+'…' : state.mode === 'link' ? 'Analizar TikTok ↗' : 'Analizar vídeo ↗';
+  $('upload-hint').textContent = active ? 'Un análisis a la vez. El estado se actualiza automáticamente.' : ready ? 'Listo para analizar en este equipo.' : state.mode === 'link' ? 'Pega un enlace de TikTok para comenzar.' : 'Selecciona un archivo para comenzar.';
+}
+function chooseMode(mode) {
+  state.mode = mode;
+  $('tiktok-source').hidden = mode !== 'link'; $('upload-source').hidden = mode !== 'upload';
+  $('tiktok-url').disabled = mode !== 'link'; $('video-file').disabled = mode !== 'upload';
+  $('mode-link').setAttribute('aria-selected', String(mode === 'link'));
+  $('mode-upload').setAttribute('aria-selected', String(mode === 'upload'));
+  notify(''); updateButton();
 }
 function chooseFile(file) {
   if (!file) return;
@@ -59,12 +68,16 @@ function renderJob(job) {
   state.renderKey = key;
   $('result').hidden = false;
   $('result-name').textContent = job.filename;
+  $('source-post').hidden = !job.source_url;
+  $('source-origin').hidden = !(job.source_url && job.report?.source?.publication?.acquisition === 'local_cache');
+  $('source-origin').textContent = 'Vídeo reutilizado desde una copia local de TikTok';
+  if (job.source_url) $('source-post').href = job.source_url;
   $('result-status').className = `status ${job.status}`;
   $('result-status').textContent = statusText[job.status];
   $('result-content').hidden = job.status !== 'ready';
   $('job-message').hidden = job.status === 'ready';
   $('job-message').className = `job-message ${job.status}`;
-  $('job-message').textContent = job.status === 'failed' ? job.error || 'No se pudo completar el análisis.' : job.status === 'queued' ? 'El vídeo está listo para procesarse.' : 'Analizando todos los fotogramas. Puedes consultar esta página mientras trabaja; al cerrar la aplicación se interrumpe el proceso.';
+  $('job-message').textContent = job.status === 'failed' ? job.error || 'No se pudo completar el análisis.' : job.status === 'queued' ? 'El vídeo está listo para procesarse.' : job.status === 'downloading' ? 'Obteniendo el vídeo de TikTok. Reutilizaremos una copia local si existe; después comenzará el análisis automáticamente.' : 'Analizando todos los fotogramas. Puedes consultar esta página mientras trabaja; al cerrar la aplicación se interrumpe el proceso.';
   if (job.status === 'ready') {
     const report = job.report;
     $('duration').textContent = seconds(report.source.duration_seconds);
@@ -112,6 +125,9 @@ async function refresh() {
   const selected = state.jobs.find((job) => job.id === state.selected);
   if (selected) renderJob(selected);
 }
+$('mode-link').addEventListener('click', () => chooseMode('link'));
+$('mode-upload').addEventListener('click', () => chooseMode('upload'));
+$('tiktok-url').addEventListener('input', updateButton);
 $('video-file').addEventListener('change', (event) => chooseFile(event.target.files[0]));
 for (const type of ['dragenter', 'dragover']) $('dropzone').addEventListener(type, (event) => { event.preventDefault(); $('dropzone').classList.add('dragover'); });
 for (const type of ['dragleave', 'drop']) $('dropzone').addEventListener(type, (event) => { event.preventDefault(); $('dropzone').classList.remove('dragover'); });
@@ -121,11 +137,17 @@ $('refresh').addEventListener('click', () => refresh().catch((error) => notify(e
 $('previous').addEventListener('click', () => { state.offset = Math.max(0, state.offset - 50); loadDetections().catch((error) => notify(error.message)); });
 $('next').addEventListener('click', () => { state.offset += 50; loadDetections().catch((error) => notify(error.message)); });
 $('upload-form').addEventListener('submit', async (event) => {
-  event.preventDefault(); if (!state.file || $('analyze-button').disabled) return;
+  event.preventDefault(); if ($('analyze-button').disabled) return;
   state.uploading = true; updateButton(); notify('');
-  const form = new FormData(); form.append('video', state.file, state.file.name); form.append('confidence', $('confidence').value);
+  let url, options;
+  if (state.mode === 'link') {
+    url = '/api/tiktok'; options = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: $('tiktok-url').value.trim(), confidence: Number($('confidence').value) }) };
+  } else {
+    const form = new FormData(); form.append('video', state.file, state.file.name); form.append('confidence', $('confidence').value);
+    url = '/api/analyses'; options = { method: 'POST', body: form };
+  }
   try {
-    const job = await api('/api/analyses', { method: 'POST', body: form });
+    const job = await api(url, options);
     state.selected = job.id; state.renderKey = null; state.offset = 0;
     renderJob(job); await refresh();
   } catch (error) { notify(error.message); }
@@ -140,6 +162,6 @@ async function poll() {
     state.config = await api('/api/config');
     $('limits').textContent = `Hasta ${Math.round(state.config.max_upload_bytes / 1024 / 1024)} MB · ${state.config.max_duration_seconds} s · ${(state.config.max_pixels / 1000000).toFixed(1)} MP`;
     $('model-state').textContent = state.config.model_available ? 'NOX texto · modelo experimental' : 'Modelo no disponible';
-    updateButton(); await poll();
+    chooseMode('link'); await poll();
   } catch (error) { notify(error.message); }
 })();
