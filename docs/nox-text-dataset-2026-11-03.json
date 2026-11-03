@@ -1,0 +1,552 @@
+{
+  "date": "2026-11-03",
+  "status": "exploratory_text_only_dataset_human_acceptance_pending",
+  "classes": {
+    "0": "nox_texto"
+  },
+  "summary": {
+    "train": {
+      "images": 19,
+      "positives": 15,
+      "negatives": 4,
+      "boxes": 18
+    },
+    "val": {
+      "images": 3,
+      "positives": 1,
+      "negatives": 2,
+      "boxes": 1
+    },
+    "test": {
+      "images": 1,
+      "positives": 1,
+      "negatives": 0,
+      "boxes": 2
+    }
+  },
+  "group_assignment": {
+    "milano-p1": "train",
+    "germany-p2": "val",
+    "kuwait-2026-provisional": "train",
+    "kuwait-2025-provisional": "test"
+  },
+  "review_sha256": "72ed78d25a6d9061fd9481390aa3621192a7c4d6986f8440f18ef21a8637bf26",
+  "previous_manifest_sha256": "3111e533e1a6be422c3fc30ed1c0e43a61b4748c7ba185416046f7c20108f571",
+  "coordinate_round_trip_tolerance_pixels": 0.001,
+  "independent_blind_test": false,
+  "rights_status": "Reuse permissions remain pending; no external upload or training in this block",
+  "limitations": [
+    "Test has one inspected image, not a sufficient independent final evaluation",
+    "Group identity is provisional; no verified match-level independence",
+    "Wordmark-only priority approved by user; independent symbol not learned"
+  ],
+  "images": [
+    {
+      "source_sha256": "b9763220d7f93c91fdbebb9f1cca650ee48230ebb05b43ba2c10e70e59e851b1",
+      "video_id": "7695444675531951382",
+      "group_id": "germany-p2",
+      "split": "val",
+      "boxes": [],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E02",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/val/7695444675531951382_b9763220d7f9.png",
+      "label": "labels/val/7695444675531951382_b9763220d7f9.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source_sha256": "244c1944d7025caadecb115831ddb37d513729b5818b12399dd5068ddaa00e11",
+      "video_id": "7695453226648292630",
+      "group_id": "germany-p2",
+      "split": "val",
+      "boxes": [
+        [
+          538,
+          1224,
+          681,
+          1310
+        ]
+      ],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E05",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/val/7695453226648292630_244c1944d702.png",
+      "label": "labels/val/7695453226648292630_244c1944d702.txt",
+      "label_sha256": "e16560da6df07e70a69eb7eda938e80b47b60bfaaafaed72a95581b0d97a2f80"
+    },
+    {
+      "source_sha256": "f3613f595620b4476b524da43c544745514659cc4d66719329229af133de688f",
+      "video_id": "7695453226648292630",
+      "group_id": "germany-p2",
+      "split": "val",
+      "boxes": [],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E04",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/val/7695453226648292630_f3613f595620.png",
+      "label": "labels/val/7695453226648292630_f3613f595620.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source_sha256": "017b5348045c9c98c59d3dd40196b36046ead9ad457e0865a2817389b8603201",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          610.6,
+          1558.9,
+          713.1,
+          1618.9
+        ]
+      ],
+      "annotation_source": "data/review/exports/nox-cvat-export-2026-10-23/verification.json:N01",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_017b5348045c.png",
+      "label": "labels/train/7697671396830317846_017b5348045c.txt",
+      "label_sha256": "eb597e86ff47700db0a2afac2f05057e922d347144cf356eb9eb7c8a013d54fe"
+    },
+    {
+      "source_sha256": "0971bde866523153afa8f927d4eabac6f74aae724d9295ecc87a5f6e9e9e5ecf",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          815,
+          1412,
+          920,
+          1458
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:31.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_0971bde86652.png",
+      "label": "labels/train/7697671396830317846_0971bde86652.txt",
+      "label_sha256": "03017a705cd542f5f66215a7639e434f6002e8e0115eedc5406ee9d42ecc9520"
+    },
+    {
+      "source_sha256": "14e241500e792a7c7fddb06c0c4e959480245a0e4dfa56893618358d486f828b",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          916,
+          1545,
+          1038,
+          1593
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:32.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_14e241500e79.png",
+      "label": "labels/train/7697671396830317846_14e241500e79.txt",
+      "label_sha256": "03f6df26fc9c45aa321c9a26d8c252418ed575780f801938a0fc740c8c05f533"
+    },
+    {
+      "source_sha256": "5322bf568303bee35e1ee7de3ca2353c1fa9339bd69f89f65361115127a4e270",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          638,
+          1426,
+          725,
+          1476
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:30.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_5322bf568303.png",
+      "label": "labels/train/7697671396830317846_5322bf568303.txt",
+      "label_sha256": "0c7d744a4ce3a03d0c3d8c6e0afb77143a28bd5e0a77496774c31ce1b60ea137"
+    },
+    {
+      "source_sha256": "6906c3834bffef8b51f653ed41c81a2480ce107f69a71e34af01eecdf7b40d5e",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          99,
+          1275,
+          151,
+          1302
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:1.72",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_6906c3834bff.png",
+      "label": "labels/train/7697671396830317846_6906c3834bff.txt",
+      "label_sha256": "de4753ba5f2ba33276d649e833ba8e6673c923fa9cccc1a9fa9c1399ec774a00"
+    },
+    {
+      "source_sha256": "83ba53063a2bf08218d3405992e5ba843df03cf627ce89dcf0f199e8fe5656d0",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          625,
+          1568,
+          705,
+          1608
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:28.48",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_83ba53063a2b.png",
+      "label": "labels/train/7697671396830317846_83ba53063a2b.txt",
+      "label_sha256": "daaf90a922a6168bf74e621be1db119558f1ca50bb2a19c7f084d579a58128c0"
+    },
+    {
+      "source_sha256": "993e0414ce343c895e69d916e3af0179492a997ee1a998eaae46039099ed1216",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          881,
+          1474,
+          1022,
+          1518
+        ]
+      ],
+      "annotation_source": "docs/review-user-moments-decisions-2026-10-26.json:33.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_993e0414ce34.png",
+      "label": "labels/train/7697671396830317846_993e0414ce34.txt",
+      "label_sha256": "ccb9eb2682dc5a8032d2dc757a5b1ee5cba7e4d9d8273236467b1476adbbe2ad"
+    },
+    {
+      "source_sha256": "e2c0a82a942808625f25bef0e3c12d7197aa925f7d0e5f9f266dcc2c11c2eb38",
+      "video_id": "7697671396830317846",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E07",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697671396830317846_e2c0a82a9428.png",
+      "label": "labels/train/7697671396830317846_e2c0a82a9428.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source_sha256": "59eb69008abdba8464fccf1927199fbb5dce7928813ee6d09d7aebf9541d5b85",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          402,
+          1264,
+          462,
+          1294
+        ]
+      ],
+      "annotation_source": "docs/review-user-video2-decisions-2026-10-26.json:56.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_59eb69008abd.png",
+      "label": "labels/train/7697683756945280279_59eb69008abd.txt",
+      "label_sha256": "3bd8ef8fac79b3a5700c16efaea8870cde7d29c04c51387543c0de5d3ae77de4"
+    },
+    {
+      "source_sha256": "ab365484aecc85475002124ba682b54a6d8185eea70c2f6b816e57405cd1da8b",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          560,
+          1203,
+          615,
+          1237
+        ]
+      ],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E08",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_ab365484aecc.png",
+      "label": "labels/train/7697683756945280279_ab365484aecc.txt",
+      "label_sha256": "0c4d93daaf670f762a480904f1f372164808083281afa4d7249a9ada42fd5ac0"
+    },
+    {
+      "source_sha256": "c86ad9072e851ffa06bafe420fc1d372249cb4d2f66f8abd8b5de050dc3883d2",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          689,
+          1368,
+          746,
+          1393
+        ]
+      ],
+      "annotation_source": "docs/review-user-video2-decisions-2026-10-26.json:54.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_c86ad9072e85.png",
+      "label": "labels/train/7697683756945280279_c86ad9072e85.txt",
+      "label_sha256": "fba261ea38afa68a80e99c38ff744148e2f89438a16061a80409f83d379a7c57"
+    },
+    {
+      "source_sha256": "e43dda2d530e79081554167d29a61119d9b214ed0707c313f6121b9d706ac681",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          497,
+          1331,
+          538,
+          1373
+        ]
+      ],
+      "annotation_source": "docs/review-user-video2-decisions-2026-10-26.json:10.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_e43dda2d530e.png",
+      "label": "labels/train/7697683756945280279_e43dda2d530e.txt",
+      "label_sha256": "8f31b2b5369ab9c24b2672e99f264ce4c7460844f318c5f305938c5ba0af9a8f"
+    },
+    {
+      "source_sha256": "ee1b65095109c8233612373c9b332b9e7c0fedf54d8469992d7de6f0a4c1e656",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E09",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_ee1b65095109.png",
+      "label": "labels/train/7697683756945280279_ee1b65095109.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source_sha256": "fa4374e02867e0e9015a4f6acbb0dc32c870dac1d5147df8428e6d33b6489210",
+      "video_id": "7697683756945280279",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [
+        [
+          45,
+          1028,
+          99,
+          1054
+        ]
+      ],
+      "annotation_source": "docs/review-user-video2-decisions-2026-10-26.json:25.0",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7697683756945280279_fa4374e02867.png",
+      "label": "labels/train/7697683756945280279_fa4374e02867.txt",
+      "label_sha256": "1ae289e4f5f3c8ae1d8960d1d7610aad72d68ebea3a57ebe48c2280ebf38b9f1"
+    },
+    {
+      "source_sha256": "b4333f1ed865003d43c1ce3b8cd6cb40610a250bbc5472c54339d4f913bd55cd",
+      "video_id": "7698076371569888534",
+      "group_id": "milano-p1",
+      "split": "train",
+      "boxes": [],
+      "annotation_source": "docs/nox-expansion-review-2026-10-23.json:E11",
+      "original_class": "nox",
+      "review": "Previous 13 target crops rechecked as text; original full-image reviews retained",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7698076371569888534_b4333f1ed865.png",
+      "label": "labels/train/7698076371569888534_b4333f1ed865.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source_sha256": "98657d69700f837a931239c6649039b408dd9b696273fec33fc1ebed4cfd2046",
+      "video_id": "7570843031901883670",
+      "group_id": "kuwait-2025-provisional",
+      "split": "test",
+      "boxes": [
+        [
+          437,
+          835,
+          519,
+          863
+        ],
+        [
+          629,
+          1118,
+          645,
+          1165
+        ]
+      ],
+      "annotation_source": "nox-text-review-2026-11-03.json:R01",
+      "original_class": "nox_texto",
+      "review": "White back wordmark and vertical sock text",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/test/7570843031901883670_98657d69700f.png",
+      "label": "labels/test/7570843031901883670_98657d69700f.txt",
+      "label_sha256": "57b71228b1293253781cde1b2c30e37c5d4e8ec388d1d7859ddb71d6d955a6e7"
+    },
+    {
+      "source_sha256": "2a639926983f07418cebbe89baeb7ac9d2090b7134f9dce961f2f4b53f975c0b",
+      "video_id": "7700661233569041687",
+      "group_id": "kuwait-2026-provisional",
+      "split": "train",
+      "boxes": [
+        [
+          696,
+          700,
+          725,
+          717
+        ],
+        [
+          761,
+          1142,
+          790,
+          1159
+        ],
+        [
+          754,
+          1372,
+          805,
+          1435
+        ]
+      ],
+      "annotation_source": "nox-text-review-2026-11-03.json:R04",
+      "original_class": "nox_texto",
+      "review": "White wordmarks on chest, shorts and sock",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7700661233569041687_2a639926983f.png",
+      "label": "labels/train/7700661233569041687_2a639926983f.txt",
+      "label_sha256": "47a7e62c47950a1d40d36550c15e5e79abc0443bab762c676f6e638e3d4d5710"
+    },
+    {
+      "source_sha256": "a05b2ae98f49042712239146ca0ee54f7dbfc55d9dbedd32c3313a6bcc0cf76f",
+      "video_id": "7702209547183721750",
+      "group_id": "kuwait-2026-provisional",
+      "split": "train",
+      "boxes": [
+        [
+          734,
+          1141,
+          823,
+          1177
+        ],
+        [
+          290,
+          1165,
+          350,
+          1236
+        ]
+      ],
+      "annotation_source": "nox-text-review-2026-11-03.json:R05",
+      "original_class": "nox_texto",
+      "review": "Chest wordmark and sleeve wordmark; independent sleeve sponsors are not targets",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7702209547183721750_a05b2ae98f49.png",
+      "label": "labels/train/7702209547183721750_a05b2ae98f49.txt",
+      "label_sha256": "898209711cc21b38272322a1984403bb060b9f961fadb070af8112ad0d24c336"
+    },
+    {
+      "source_sha256": "980f10c4a07fe1353a380470dde87ab2e204ae035e325cfb3225769c20cbec76",
+      "video_id": "7701662392148593942",
+      "group_id": "kuwait-2026-provisional",
+      "split": "train",
+      "boxes": [
+        [
+          695,
+          1705,
+          855,
+          1766
+        ]
+      ],
+      "annotation_source": "nox-text-review-2026-11-03.json:R06",
+      "original_class": "nox_texto",
+      "review": "Orange NOX wordmark on dark shirt",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7701662392148593942_980f10c4a07f.png",
+      "label": "labels/train/7701662392148593942_980f10c4a07f.txt",
+      "label_sha256": "9f08d795f1d233c338139457ee3aba8e4c23e3b8dab78562604589ed0dd1a2ff"
+    },
+    {
+      "source_sha256": "d8e6579bb83bc08a6a0853fccdfa752222c16bdc63ee0ab502786bd150da519f",
+      "video_id": "7702355729411247382",
+      "group_id": "kuwait-2026-provisional",
+      "split": "train",
+      "boxes": [],
+      "annotation_source": "nox-text-review-2026-11-03.json:R09",
+      "original_class": "nox_texto",
+      "review": "Full image reviewed: Premier Padel and another chest emblem, no identifiable or suspected NOX",
+      "width": 1080,
+      "height": 1920,
+      "image": "images/train/7702355729411247382_d8e6579bb83b.png",
+      "label": "labels/train/7702355729411247382_d8e6579bb83b.txt",
+      "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "archive_sha256": "8332c1b07824f7c5a2abac9c43f17c23cc78dfa2d7c92d9953af77b4a9364254",
+  "loader_validation": {
+    "ultralytics": "8.4.189",
+    "train": {
+      "images": 19,
+      "boxes": 18,
+      "corrupt": 0
+    },
+    "val": {
+      "images": 3,
+      "boxes": 1,
+      "corrupt": 0
+    },
+    "test": {
+      "images": 1,
+      "boxes": 2,
+      "corrupt": 0
+    }
+  }
+}

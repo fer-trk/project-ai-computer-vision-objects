@@ -1,0 +1,192 @@
+{
+  "date": "2026-11-03",
+  "scope": "NOX text only, user approved priority; no other brands or independent symbol",
+  "reviewer": "assistant under user delegation",
+  "human_acceptance": "pending",
+  "coordinate_convention": "xyxy integer pixels on originals",
+  "images": [
+    {
+      "id": "R01",
+      "video_id": "7570843031901883670",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7570843031901883670/T01_frame_000030.png",
+      "image_sha256": "98657d69700f837a931239c6649039b408dd9b696273fec33fc1ebed4cfd2046",
+      "decision": "positive",
+      "reason": "White back wordmark and vertical sock text",
+      "width": 1080,
+      "height": 1920,
+      "boxes": [
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            437,
+            835,
+            519,
+            863
+          ]
+        },
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            629,
+            1118,
+            645,
+            1165
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "video_id": "7570843031901883670",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7570843031901883670/T12_frame_000671.png",
+      "image_sha256": "b03e0be8f445ce2c1916c94ef6d1a5e5aad8cdae1ba328ecfbf9993c3aa907e8",
+      "decision": "excluded",
+      "reason": "Small angled chest/sleeve and equipment detail need further review",
+      "width": 1080,
+      "height": 1920,
+      "boxes": []
+    },
+    {
+      "id": "R03",
+      "video_id": "7695117320800259350",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7695117320800259350/T12_frame_000973.png",
+      "image_sha256": "d6920da1b305b643254309997a9cc7a4d513a77efa80cd36f4a0c826b491e2f6",
+      "decision": "excluded",
+      "reason": "Back NOX is truncated at the lower image boundary",
+      "width": 1080,
+      "height": 1920,
+      "boxes": []
+    },
+    {
+      "id": "R04",
+      "video_id": "7700661233569041687",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7700661233569041687/T01_frame_000009.png",
+      "image_sha256": "2a639926983f07418cebbe89baeb7ac9d2090b7134f9dce961f2f4b53f975c0b",
+      "decision": "positive",
+      "reason": "White wordmarks on chest, shorts and sock",
+      "width": 1080,
+      "height": 1920,
+      "boxes": [
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            696,
+            700,
+            725,
+            717
+          ]
+        },
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            761,
+            1142,
+            790,
+            1159
+          ]
+        },
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            754,
+            1372,
+            805,
+            1435
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "video_id": "7702209547183721750",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7702209547183721750/T12_frame_000594.png",
+      "image_sha256": "a05b2ae98f49042712239146ca0ee54f7dbfc55d9dbedd32c3313a6bcc0cf76f",
+      "decision": "positive",
+      "reason": "Chest wordmark and sleeve wordmark; independent sleeve sponsors are not targets",
+      "width": 1080,
+      "height": 1920,
+      "boxes": [
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            734,
+            1141,
+            823,
+            1177
+          ]
+        },
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            290,
+            1165,
+            350,
+            1236
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "video_id": "7701662392148593942",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7701662392148593942/T12_frame_001034.png",
+      "image_sha256": "980f10c4a07fe1353a380470dde87ab2e204ae035e325cfb3225769c20cbec76",
+      "decision": "positive",
+      "reason": "Orange NOX wordmark on dark shirt",
+      "width": 1080,
+      "height": 1920,
+      "boxes": [
+        {
+          "class_name": "nox_texto",
+          "class_id": 0,
+          "bbox_xyxy": [
+            695,
+            1705,
+            855,
+            1766
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R07",
+      "video_id": "7701662392148593942",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7701662392148593942/T09_frame_000764.png",
+      "image_sha256": "e94509beb8220b427c1a40bdc40474e9473a958354f26a3a4caf0db18e6f4fa5",
+      "decision": "excluded",
+      "reason": "Shirt/shorts marks are blurred during action",
+      "width": 1080,
+      "height": 1920,
+      "boxes": []
+    },
+    {
+      "id": "R08",
+      "video_id": "7570843031901883670",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7570843031901883670/T10_frame_000555.png",
+      "image_sha256": "252e00c2402c92579be62007c1f88ee6f3d6e4a855f374b04ff711f8dce3731e",
+      "decision": "excluded",
+      "reason": "Several tiny/blurred marks; cannot safely complete all target annotations",
+      "width": 1080,
+      "height": 1920,
+      "boxes": []
+    },
+    {
+      "id": "R09",
+      "video_id": "7702355729411247382",
+      "source_image": "data/review/nox-new-sources-2026-10-30/frames/7702355729411247382/T06_frame_000328.png",
+      "image_sha256": "d8e6579bb83bc08a6a0853fccdfa752222c16bdc63ee0ab502786bd150da519f",
+      "decision": "negative",
+      "reason": "Full image reviewed: Premier Padel and another chest emblem, no identifiable or suspected NOX",
+      "width": 1080,
+      "height": 1920,
+      "boxes": []
+    }
+  ]
+}
