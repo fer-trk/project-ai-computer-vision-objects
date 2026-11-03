@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-03",
+  "issue": "https://github.com/fer-trk/project-ai-computer-vision-objects/issues/5",
+  "annotation_review": "nox-text-review-2026-11-03.json",
+  "dataset_zip_sha256": "8332c1b07824f7c5a2abac9c43f17c23cc78dfa2d7c92d9953af77b4a9364254",
+  "user_statement": "Las cajas están bien, detecta nox las que efectivamente son nox y no lo detecta donde no está. Estoy de acuerdo con el ensayo, avanza con el cuaderno listo para ejecutar",
+  "annotations_user_approved": true,
+  "model_accepted": false,
+  "scope": "Preparar el cuaderno del ensayo de texto NOX; no ejecutar entrenamiento en este bloque",
+  "historical_manifest_note": "El ZIP y su manifiesto no se modifican. Este registro posterior sustituye su estado histórico de aprobación humana pendiente, sin modificar el estado de permisos de reutilización.",
+  "notebook": "../notebooks/nox_text_training.ipynb",
+  "validation": {
+    "ultralytics": "8.4.189",
+    "passed": [
+      "Esquema nbformat y sintaxis de ocho celdas de código sin salidas inventadas",
+      "Rechazo de subida vacía, múltiple o ZIP con hash incorrecto antes de extraer",
+      "ZIP real: 23 hashes de imágenes/etiquetas, dimensiones, cajas y grupos disjuntos",
+      "Cargador real Ultralytics: 19 train, 3 val, 1 test, cero archivos corruptos",
+      "Parámetros de entrenamiento aceptados por la API instalada",
+      "Orquestación de entrenamiento y exportación con simulación temporal, sin entrenar",
+      "Bloqueo correcto del entrenamiento en máquina sin GPU CUDA"
+    ],
+    "not_executed": [
+      "Instalación y sesión GPU reales de Colab",
+      "Entrenamiento, evaluación y predicciones reales",
+      "Subida y descarga desde la interfaz de Colab"
+    ]
+  },
+  "limitations": [
+    "Validación con un positivo y dos negativos; métricas inestables",
+    "Test de una imagen ya inspeccionada; no es prueba ciega final",
+    "Permisos de reutilización pendientes en el registro de fuentes"
+  ]
+}
