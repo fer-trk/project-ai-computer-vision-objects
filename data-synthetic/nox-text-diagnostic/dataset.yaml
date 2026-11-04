@@ -1,0 +1,5 @@
+# Synthetic diagnostic set. Not part of the official train/val/test splits.
+train: images/diag_train
+val: images/diag_val
+names:
+  0: nox_texto

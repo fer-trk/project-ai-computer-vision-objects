@@ -47,6 +47,17 @@ with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
     state = dict(Path=Path, datetime=datetime, timezone=timezone, hashlib=hashlib,
                  io=io, json=json, math=math, zipfile=zipfile, time=time,
                  WORK=Path(folder), environment={"validation": "offline"}, freeze="offline validation\n")
+    unconfirmed = cells["dataset-check"]
+    assert "PERMISSIONS_CONFIRMED = False" in unconfirmed
+    stub.files.upload = lambda: (_ for _ in ()).throw(AssertionError("Upload requested without permissions"))
+    try:
+        exec(unconfirmed, state)
+    except PermissionError:
+        assert not (Path(folder) / "dataset").exists()
+    else:
+        raise AssertionError("Unconfirmed permissions were accepted")
+    checks.append("unconfirmed reuse permissions stop the run before upload")
+    cells["dataset-check"] = unconfirmed.replace("PERMISSIONS_CONFIRMED = False", "PERMISSIONS_CONFIRMED = True")
     for invalid in ({}, {"a.zip": b"wrong"}, {"a": archive_bytes, "b": archive_bytes}):
         stub.files.upload = lambda payload=invalid: payload
         try:
@@ -72,7 +83,9 @@ with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
                              batch_size=2, augment=False, cache=False, prefix=split+": ")
         assert len(loaded) == count and len(loaded.labels) == count
     checks.append("Ultralytics real loader: train 19 / val 3 / test 1")
-    exec(cells["experiment-config"], state)
+    # This selection belongs only to the offline harness, never to a real run.
+    offline_config = cells["experiment-config"].replace("CONFIDENCE_THRESHOLD = None", "CONFIDENCE_THRESHOLD = 0.25").replace('CONFIDENCE_RATIONALE = ""', 'CONFIDENCE_RATIONALE = "Offline orchestration fixture, not a selected production threshold"')
+    exec(offline_config, state)
     get_cfg(DEFAULT_CFG_DICT, overrides=state["PARAMETERS"])
     checks.append("training parameters accepted by installed Ultralytics")
 
@@ -89,6 +102,9 @@ with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
             target = Path(kwargs["project"]) / kwargs["name"] / "weights/best.pt"
             target.parent.mkdir(parents=True)
             target.write_bytes(b"offline stub, not model weights")
+            (target.parent / "last.pt").write_bytes(b"offline stub, not model weights")
+            (target.parent.parent / "args.yaml").write_text("epochs: 50\n")
+            (target.parent.parent / "results.csv").write_text("epoch\n1\n")
 
     state.update(YOLO=FakeYOLO, torch=types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: True)))
     exec(cells["train"], state)
@@ -102,7 +118,8 @@ with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
     exec(cells["download"], state)
     with zipfile.ZipFile(downloads[0]) as exported:
         assert exported.testzip() is None
-        assert {"experiment.json", "environment.json", "dataset-manifest.json", "train/weights/best.pt"} <= set(exported.namelist())
+        assert {"experiment.json", "environment.json", "dataset-manifest.json", "train/weights/best.pt", "run-manifest.json"} <= set(exported.namelist())
+        assert json.loads(exported.read("run-manifest.json"))["missing_required"] == []
     checks.append("result archive, CRC and download invocation with temporary mock artifacts")
 
 if not torch.cuda.is_available():
