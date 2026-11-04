@@ -6,3 +6,5 @@ data/raw/
 
 data/review/
 local-artifacts/
+data-synthetic/*/images/
+data-synthetic/*/labels/*.cache
