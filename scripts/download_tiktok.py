@@ -121,8 +121,10 @@ def download_tiktok(url, folder, *, max_bytes, max_duration, max_pixels, factory
         if max(data.get('downloaded_bytes') or 0, data.get('total_bytes') or 0) > max_bytes:
             raise ValueError('El vídeo supera el tamaño de descarga permitido')
 
+    # Do not set max_downloads: yt-dlp raises MaxDownloadsReached once the single download finishes,
+    # which this function would report as a failed download. playlist_items bounds a post to one item.
     options = dict(format='best[ext=mp4]/best', outtmpl=str(folder/'tiktok.%(ext)s'),
-                   noplaylist=True, allowed_extractors=['TikTok'], max_downloads=1,
+                   noplaylist=True, playlist_items='1', allowed_extractors=['TikTok'],
                    max_filesize=max_bytes, socket_timeout=10, retries=1, fragment_retries=1,
                    cachedir=False, cookiefile=None, cookiesfrombrowser=None, usenetrc=False,
                    quiet=True, no_warnings=True, noprogress=True, match_filter=check,

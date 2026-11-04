@@ -81,6 +81,26 @@ class TikTokDownloadTests(unittest.TestCase):
         self.assertEqual(reused['acquisition'], 'local_cache')
         self.assertEqual((self.folder/'source.upload').read_bytes(), b'0123456789')
 
+    def test_finished_download_is_not_reported_as_failed_by_the_yt_dlp_counter(self):
+        """yt-dlp raises MaxDownloadsReached after a finished download when max_downloads is set."""
+        from yt_dlp.utils import MaxDownloadsReached
+
+        def counting(options):
+            self.assertEqual(options['playlist_items'], '1')
+            downloader = self.factory(options)
+            original = downloader.extract_info
+            def extract_info(url, download=True):
+                info = original(url, download=download)
+                if options.get('max_downloads') == 1:
+                    raise MaxDownloadsReached()
+                return info
+            downloader.extract_info = extract_info
+            return downloader
+        metadata = download_tiktok(URL, self.folder, max_bytes=100, max_duration=60, max_pixels=2073600, factory=counting)
+        self.assertEqual(metadata['video_id'], VIDEO_ID)
+        self.assertEqual(metadata['acquisition'], 'public_download')
+        self.assertTrue((self.folder/'source.upload').is_file())
+
     def test_corrupt_cache_and_existing_destination_are_rejected(self):
         cache = self.root/'cache'; self.download(cache_dir=cache)
         with self.assertRaises(ValueError): self.download(cache_dir=cache)
