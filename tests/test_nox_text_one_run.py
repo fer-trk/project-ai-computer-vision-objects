@@ -83,7 +83,7 @@ class Harness:
                 (weights.parent / "results.csv").write_text("epoch\n1\n")
 
         self.state = dict(Path=Path, datetime=datetime, timezone=timezone, hashlib=hashlib, io=io, json=json, zipfile=zipfile, time=time,
-                          math=__import__("math"), WORK=self.folder / "work", environment={"stub": True}, freeze="stub==1\n", YOLO=FakeYOLO,
+                          math=__import__("math"), WORK=self.folder / "work", environment={"stub": True}, ENVIRONMENT_READY=True, freeze="stub==1\n", YOLO=FakeYOLO,
                           torch=types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: True)))
         self.state["WORK"].mkdir()
         self.confirmed = confirmed
@@ -141,6 +141,27 @@ class NotebookTests(Base):
         config = yaml.safe_load((harness.state["DATA"] / "dataset.yaml").read_text())
         self.assertEqual(config["names"], {0: "nox_texto"})
         self.assertEqual(len(harness.state["manifest"]["images"]), 23)
+
+    def test_failed_environment_stops_before_requesting_dataset(self):
+        harness = Harness(self.folder, make_zip())
+        harness.state["ENVIRONMENT_READY"] = False
+        harness.colab.files.upload = lambda: self.fail("upload requested before environment checks passed")
+        with self.assertRaisesRegex(RuntimeError, "entorno"):
+            harness.run("dataset-check")
+
+    def test_failed_environment_cannot_prepare_or_start_training(self):
+        harness = Harness(self.folder, make_zip())
+        harness.run("dataset-check")
+        harness.state["ENVIRONMENT_READY"] = False
+        with self.assertRaises(RuntimeError):
+            harness.run("experiment-config")
+        self.assertFalse((harness.state["WORK"] / "runs").exists())
+        harness.state["ENVIRONMENT_READY"] = True
+        harness.run("experiment-config")
+        harness.state["ENVIRONMENT_READY"] = False
+        with self.assertRaises(RuntimeError):
+            harness.run("train")
+        self.assertFalse((harness.state["RUN"] / "TRAIN_STARTED.lock").exists())
 
     def test_wrong_hash_and_wrong_class_yaml_are_rejected_before_extraction(self):
         harness = Harness(self.folder, make_zip())

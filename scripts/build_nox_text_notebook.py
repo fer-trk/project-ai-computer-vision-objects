@@ -50,6 +50,8 @@ from pathlib import Path
 from datetime import datetime, timezone
 import hashlib, importlib.metadata, io, json, math, platform, shutil, subprocess, sys, time, zipfile
 import torch
+GPU_CHECK_PASSED = False
+ENVIRONMENT_READY = False
 
 if not torch.cuda.is_available():
     raise RuntimeError("No hay GPU CUDA. Selecciona GPU gratuita y vuelve a comenzar; no se inicia entrenamiento CPU.")
@@ -61,6 +63,7 @@ torch.cuda.empty_cache()
 WORK = Path("/content/nox-text-work")
 WORK.mkdir(exist_ok=True)
 environment = {"python":sys.version,"platform":platform.platform(),"torch":torch.__version__,"cuda":torch.version.cuda,"gpu":torch.cuda.get_device_name(0)}
+GPU_CHECK_PASSED = True
 ''', 'gpu-check')
 md('''
 ### 1. Instalar herramientas
@@ -71,6 +74,9 @@ no reiniciar automáticamente ni repetir un entrenamiento.
 ''')
 code('''
 import importlib.util
+ENVIRONMENT_READY = False
+if not globals().get("GPU_CHECK_PASSED",False) or not torch.cuda.is_available():
+    raise RuntimeError("La comprobación GPU debe pasar y CUDA debe seguir disponible antes de instalar")
 if importlib.util.find_spec("jedi") is None:
     subprocess.run([sys.executable,"-m","pip","install","jedi==0.19.2"],check=True)
 subprocess.run([sys.executable,"-m","pip","install","ultralytics==8.4.189"],check=True)
@@ -78,7 +84,12 @@ subprocess.run([sys.executable,"-m","pip","check"],check=True)
 from ultralytics import YOLO, settings
 settings.update({k:False for k in ("sync","wandb","mlflow","comet","clearml") if k in settings})
 environment["ultralytics"] = importlib.metadata.version("ultralytics")
+if environment["ultralytics"] != "8.4.189":
+    raise RuntimeError("La versión de Ultralytics no coincide con la fijada")
 freeze = subprocess.run([sys.executable,"-m","pip","freeze"],capture_output=True,text=True,check=True).stdout
+if not torch.cuda.is_available():
+    raise RuntimeError("La GPU dejó de estar disponible; detenerse antes de subir el dataset")
+ENVIRONMENT_READY = True
 ''', 'install')
 md('''
 ## Pasos
@@ -97,6 +108,8 @@ EXPECTED_ZIP = "8332c1b07824f7c5a2abac9c43f17c23cc78dfa2d7c92d9953af77b4a9364254
 PERMISSIONS_CONFIRMED = False  #@param {type:"boolean"}
 if not PERMISSIONS_CONFIRMED:
     raise PermissionError("Permisos de reutilización sin confirmar: no se sube el ZIP ni se entrena. Marca la casilla solo si constan por escrito.")
+if not globals().get("ENVIRONMENT_READY",False) or not torch.cuda.is_available():
+    raise RuntimeError("Las comprobaciones de entorno deben pasar antes de subir el dataset")
 uploaded = files.upload()
 if len(uploaded) != 1:
     raise ValueError("Selecciona exactamente un ZIP")
@@ -197,6 +210,8 @@ La elección se guarda antes del entrenamiento y se reutiliza al mostrar las caj
 no equivale a precisión ni a una regla de claridad aceptada.
 ''')
 code('''
+if not globals().get("ENVIRONMENT_READY",False) or not torch.cuda.is_available():
+    raise RuntimeError("El entorno debe estar listo y conservar GPU antes de preparar el run")
 CONFIDENCE_THRESHOLD = None  #@param {type:"raw"}
 CONFIDENCE_RATIONALE = ""  #@param {type:"string"}
 if (isinstance(CONFIDENCE_THRESHOLD,bool) or not isinstance(CONFIDENCE_THRESHOLD,(int,float))
@@ -239,7 +254,7 @@ No promete que el modelo detecte bien. Si falla, conserva el error y ejecuta la
 última celda para descargar lo disponible antes de reiniciar o cambiar parámetros.
 ''')
 code('''
-if not torch.cuda.is_available():
+if not globals().get("ENVIRONMENT_READY",False) or not torch.cuda.is_available():
     raise RuntimeError("La GPU ya no está disponible; detener el ensayo")
 if (RUN/"train").exists():
     raise FileExistsError("Esta ejecución ya comenzó; detenerse sin repetir el entrenamiento")

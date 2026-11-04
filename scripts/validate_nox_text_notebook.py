@@ -46,7 +46,8 @@ checks = ["nbformat schema", "8 code cells: syntax and empty outputs"]
 with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
     state = dict(Path=Path, datetime=datetime, timezone=timezone, hashlib=hashlib,
                  io=io, json=json, math=math, zipfile=zipfile, time=time,
-                 WORK=Path(folder), environment={"validation": "offline"}, freeze="offline validation\n")
+                 WORK=Path(folder), environment={"validation": "offline"}, ENVIRONMENT_READY=True,
+                 torch=types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: True)), freeze="offline validation\n")
     unconfirmed = cells["dataset-check"]
     assert "PERMISSIONS_CONFIRMED = False" in unconfirmed
     stub.files.upload = lambda: (_ for _ in ()).throw(AssertionError("Upload requested without permissions"))
