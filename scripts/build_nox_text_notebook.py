@@ -66,7 +66,8 @@ md('''
 ### 1. Instalar herramientas
 Se conserva PyTorch de Colab. Se instala `jedi` si falta y se fija Ultralytics
 8.4.189. Se desactivan integraciones usando únicamente opciones existentes.
-Si se pide reiniciar la sesión, reiniciarla y volver a la primera celda.
+Si se pide reiniciar la sesión, detenerse antes de entrenar y revisar el entorno;
+no reiniciar automáticamente ni repetir un entrenamiento.
 ''')
 code('''
 import importlib.util
@@ -84,13 +85,18 @@ md('''
 ### 2. Subir y verificar el dataset
 Selecciona solo **nox-text-dataset-2026-11-03.zip**, entregado junto al cuaderno.
 Se comprueban el SHA-256 del ZIP, cada imagen/etiqueta, las cajas y la separación
-de grupos. Se genera una ruta válida para esta sesión. No usar otro ZIP parecido.
+de grupos, y que el YAML y el manifiesto definan solo `nox_texto`. Se genera una ruta
+válida para esta sesión. No usar otro ZIP parecido. La celda se detiene antes de pedir
+el ZIP si no se marca `PERMISSIONS_CONFIRMED` (permisos de reutilización por escrito).
 ''')
 code('''
 from google.colab import files
 from PIL import Image, ImageDraw
 import yaml
 EXPECTED_ZIP = "8332c1b07824f7c5a2abac9c43f17c23cc78dfa2d7c92d9953af77b4a9364254"
+PERMISSIONS_CONFIRMED = False  #@param {type:"boolean"}
+if not PERMISSIONS_CONFIRMED:
+    raise PermissionError("Permisos de reutilización sin confirmar: no se sube el ZIP ni se entrena. Marca la casilla solo si constan por escrito.")
 uploaded = files.upload()
 if len(uploaded) != 1:
     raise ValueError("Selecciona exactamente un ZIP")
@@ -108,6 +114,9 @@ with zipfile.ZipFile(io.BytesIO(content)) as archive:
     expected.update(prefix+i[k] for i in manifest["images"] for k in ("image","label"))
     if len(entries)!=len(set(entries)) or set(entries)!=expected:
         raise ValueError("Contenido de ZIP inesperado")
+    packaged = yaml.safe_load(archive.read(prefix+"dataset.yaml"))
+    if manifest["classes"] != {"0":"nox_texto"} or packaged.get("names") != {0:"nox_texto"} or any(packaged.get(k) != "images/"+k for k in ("train","val","test")):
+        raise ValueError("El YAML o el manifiesto del ZIP no definen la clase única nox_texto")
     if sum(i.file_size for i in archive.infolist()) > 200_000_000:
         raise ValueError("Tamaño de ZIP inesperado")
     for name in entries:
@@ -176,24 +185,50 @@ de este ensayo, no una configuración optimizada. No cambiar parámetros mirando
 `USE_DRIVE=False` usa almacenamiento temporal. Para respaldo durante el ensayo,
 puedes activar Drive; pedirá tu autorización. Sin Drive, una desconexión puede
 perder resultados antes de descargarlos. No se compran recursos ni servicios.
+
+**Un solo ensayo:** esta celda comprueba que los parámetros acordados no se han
+editado y crea `ONE_RUN.lock`; un segundo intento falla. No hay barridos ni repeticiones
+automáticas. Con una sesión nueva sin Drive el bloqueo desaparece: no ejecutar otro ensayo
+sin acuerdo explícito.
+
+Antes de continuar, Fer debe elegir `CONFIDENCE_THRESHOLD` y explicar el motivo en
+`CONFIDENCE_RATIONALE`, sin observar predicciones del test. No hay umbral por defecto.
+La elección se guarda antes del entrenamiento y se reutiliza al mostrar las cajas;
+no equivale a precisión ni a una regla de claridad aceptada.
 ''')
 code('''
+CONFIDENCE_THRESHOLD = None  #@param {type:"raw"}
+CONFIDENCE_RATIONALE = ""  #@param {type:"string"}
+if (isinstance(CONFIDENCE_THRESHOLD,bool) or not isinstance(CONFIDENCE_THRESHOLD,(int,float))
+        or not math.isfinite(CONFIDENCE_THRESHOLD) or not 0<=CONFIDENCE_THRESHOLD<=1
+        or not isinstance(CONFIDENCE_RATIONALE,str) or not CONFIDENCE_RATIONALE.strip()):
+    raise ValueError("Elige y justifica el umbral antes de ver predicciones; no hay un valor por defecto.")
+CONFIDENCE_SELECTION=dict(confidence_threshold=float(CONFIDENCE_THRESHOLD),confidence_rationale=CONFIDENCE_RATIONALE.strip())
 USE_DRIVE = False
 RUNS = WORK/"runs"
 if USE_DRIVE:
     from google.colab import drive
     drive.mount("/content/drive")
     RUNS=Path("/content/drive/MyDrive/nox-text-runs")
-RUN_NAME="nox-text-"+datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-RUN=RUNS/RUN_NAME
-RUN.mkdir(parents=True,exist_ok=False)
 PARAMETERS=dict(epochs=50,patience=10,imgsz=640,batch=2,device=0,seed=42,deterministic=True,
     workers=0,amp=False,save=True,save_period=5,plots=True,cache=False,
     mosaic=0.0,mixup=0.0,fliplr=0.0,flipud=0.0,hsv_h=0.015,hsv_s=0.3,hsv_v=0.2,scale=0.2,translate=0.1)
+AGREED=dict(epochs=50,patience=10,imgsz=640,batch=2,seed=42,mosaic=0.0,mixup=0.0,fliplr=0.0,flipud=0.0)
+if any(PARAMETERS[k]!=v for k,v in AGREED.items()):
+    raise ValueError("Los parámetros difieren de la configuración acordada; este paquete no admite barridos")
+RUNS.mkdir(parents=True,exist_ok=True)
+RUN_NAME="nox-text-"+datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+try:
+    with (RUNS/"ONE_RUN.lock").open("x") as lock:
+        lock.write(RUN_NAME)
+except FileExistsError:
+    raise FileExistsError("Ya se preparó una ejecución (ONE_RUN.lock). Este paquete admite un solo run; no se repite ni se barren hiperparámetros.") from None
+RUN=RUNS/RUN_NAME
+RUN.mkdir(parents=True,exist_ok=False)
 (RUN/"environment.json").write_text(json.dumps(environment,indent=2))
 (RUN/"requirements-resolved.txt").write_text(freeze)
 (RUN/"dataset-manifest.json").write_bytes((DATA/"manifest.json").read_bytes())
-(RUN/"experiment.json").write_text(json.dumps({"run_name":RUN_NAME,"parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"prepared"},indent=2))
+(RUN/"experiment.json").write_text(json.dumps({"run_name":RUN_NAME,"model":"yolo11n.pt","parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"prepared",**CONFIDENCE_SELECTION},indent=2))
 print("Ejecución:",RUN_NAME,"| Resultados:",RUN)
 print(PARAMETERS)
 ''','experiment-config')
@@ -207,21 +242,27 @@ code('''
 if not torch.cuda.is_available():
     raise RuntimeError("La GPU ya no está disponible; detener el ensayo")
 if (RUN/"train").exists():
-    raise FileExistsError("Esta ejecución ya comenzó; crea un nuevo RUN_NAME para otro ensayo")
-model=YOLO("yolo11n.pt")
-weights=Path(model.ckpt_path)
-checkpoint_sha256=hashlib.sha256(weights.read_bytes()).hexdigest()
-record={"run_name":RUN_NAME,"parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"pretrained_checkpoint_sha256":checkpoint_sha256,"annotations_user_approved":"2026-11-03"}
-started=time.perf_counter()
-record["status"]="training"
-(RUN/"experiment.json").write_text(json.dumps(record,indent=2))
+    raise FileExistsError("Esta ejecución ya comenzó; detenerse sin repetir el entrenamiento")
 try:
+    with (RUN/"TRAIN_STARTED.lock").open("x") as lock:
+        lock.write(RUN_NAME)
+except FileExistsError:
+    raise FileExistsError("Ya se intentó entrenar este run; detenerse sin repetirlo, aunque falte la carpeta train") from None
+import traceback
+record={"run_name":RUN_NAME,"model":"yolo11n.pt","parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"starting",**CONFIDENCE_SELECTION}
+started=time.perf_counter()
+try:
+    model=YOLO("yolo11n.pt")
+    record["pretrained_checkpoint_sha256"]=hashlib.sha256(Path(model.ckpt_path).read_bytes()).hexdigest()
+    record["status"]="training"
+    (RUN/"experiment.json").write_text(json.dumps(record,indent=2))
     model.train(data=str(DATA/"dataset.yaml"),project=str(RUN),name="train",exist_ok=False,**PARAMETERS)
     assert (RUN/"train/weights/best.pt").is_file()
     record["status"]="training_completed"
 except BaseException as error:
     record["status"]="training_failed_or_interrupted"
     record["error"]=type(error).__name__+": "+str(error)
+    (RUN/"error.log").write_text(traceback.format_exc(),encoding="utf-8")
     raise
 finally:
     record["elapsed_training_seconds"]=time.perf_counter()-started
@@ -236,8 +277,9 @@ test solo se evalúa ahora; es una reserva exploratoria ya inspeccionada, no una
 prueba final suficiente. No seleccionar umbrales ni reentrenar usando su resultado.
 
 Se mostrarán predicciones sobre las tres imágenes de validación, incluidas las
-dos negativas, y la imagen de reserva. El umbral 0.25 es diagnóstico, no una regla
-de claridad aprobada. Una confianza alta no demuestra exactitud. Comparar cajas
+dos negativas, y la imagen de reserva. Se reutiliza el umbral y motivo guardados
+antes del entrenamiento; no hay un 0.25 implícito ni una regla de claridad aprobada.
+Una confianza alta no demuestra exactitud. Comparar cajas
 con el logo real; no aceptar el modelo solo por una métrica o por acabar 50 épocas.
 ''')
 code('''
@@ -246,7 +288,8 @@ if not best_path.is_file():
     raise FileNotFoundError("No existe best.pt; revisa el entrenamiento")
 best=YOLO(str(best_path))
 assert best.names=={0:"nox_texto"}
-evaluation={"checkpoint_sha256":hashlib.sha256(best_path.read_bytes()).hexdigest(),"test_is_exploratory":True,"splits":{}}
+selected=json.loads((RUN/"experiment.json").read_text())
+evaluation={"checkpoint_sha256":hashlib.sha256(best_path.read_bytes()).hexdigest(),"test_is_exploratory":True,"confidence_threshold":selected["confidence_threshold"],"confidence_rationale":selected["confidence_rationale"],"splits":{}}
 for split in ("val","test"):
     metrics=best.val(data=str(DATA/"dataset.yaml"),split=split,device=0,imgsz=640,batch=2,workers=0,plots=True,project=str(RUN),name="evaluation-"+split)
     evaluation["splits"][split]={k:float(v) for k,v in metrics.results_dict.items()}
@@ -255,14 +298,14 @@ predictions=[]
 for item in manifest["images"]:
     if item["split"] not in ("val","test"):
         continue
-    result=best.predict(str(DATA/item["image"]),conf=0.25,imgsz=640,device=0,save=False,verbose=False)[0]
+    result=best.predict(str(DATA/item["image"]),conf=selected["confidence_threshold"],imgsz=640,device=0,save=False,verbose=False)[0]
     predictions.append({"image":item["image"],"split":item["split"],"reference_boxes":item["boxes"],"predicted_boxes":result.boxes.xyxy.cpu().tolist(),"scores":result.boxes.conf.cpu().tolist(),"classes":result.boxes.cls.cpu().tolist(),"review_status":"pending_human_review"})
     target=RUN/"predictions"/Path(item["image"]).name
     target.parent.mkdir(exist_ok=True)
     result.save(filename=str(target))
     print(item["split"],Path(item["image"]).name,"| referencia:",len(item["boxes"]),"| predicciones:",len(result.boxes))
     display(Image.open(target))
-(RUN/"predictions.json").write_text(json.dumps({"confidence_threshold":0.25,"predictions":predictions},indent=2,allow_nan=False))
+(RUN/"predictions.json").write_text(json.dumps({"confidence_threshold":selected["confidence_threshold"],"confidence_rationale":selected["confidence_rationale"],"predictions":predictions},indent=2,allow_nan=False))
 print(evaluation)
 ''','evaluate')
 md('''
@@ -284,6 +327,12 @@ if "RUN" not in globals() or not RUN.exists():
 archive_path=Path(str(RUN)+"-results.zip")
 if archive_path.exists():
     raise FileExistsError("Ya hay un ZIP de esta ejecución; no sobrescribir")
+REQUIRED=("train/weights/best.pt","train/weights/last.pt","train/args.yaml","train/results.csv","experiment.json","environment.json","requirements-resolved.txt","dataset-manifest.json")
+listed=[p for p in sorted(RUN.rglob("*")) if p.is_file() and p.name!="run-manifest.json"]
+run_manifest={"run_name":RUN.name,"status":json.loads((RUN/"experiment.json").read_text())["status"],
+    "missing_required":[r for r in REQUIRED if not (RUN/r).is_file()],"error_log_present":(RUN/"error.log").is_file(),
+    "files":{p.relative_to(RUN).as_posix():{"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),"bytes":p.stat().st_size} for p in listed}}
+(RUN/"run-manifest.json").write_text(json.dumps(run_manifest,indent=2),encoding="utf-8")
 with zipfile.ZipFile(archive_path,"x",zipfile.ZIP_DEFLATED) as archive:
     for path in sorted(RUN.rglob("*")):
         if path.is_file():

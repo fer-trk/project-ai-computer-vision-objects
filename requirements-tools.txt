@@ -16,6 +16,7 @@ numpy==2.4.6
 opencv-python-headless==5.0.0.93
 packaging==26.3
 pillow==13.0.0
+PyYAML==6.0.3
 pycparser==3.11
 pycryptodomex==3.24.1
 pyparsing==3.3.3
