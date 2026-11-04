@@ -1,6 +1,6 @@
 # T04 — Ruta hacia el nivel esencial (runbook)
 
-Estado: **borrador pendiente de revisión de Fer**. Documento de planificación: no contiene resultados nuevos, no aprueba umbrales y no cierra T04, T05 ni T10. Las cifras citadas proceden de documentos ya publicados y se indican con su fuente.
+Estado: **borrador de planificación**. Revisión documental y fusión aprobadas por Fer el 04/11/2026; esta aprobación no elige un plan ni autoriza la reducción de alcance del Plan B. El documento no contiene resultados nuevos, no aprueba umbrales y no cierra T04, T05 ni T10. Las cifras citadas proceden de documentos ya publicados y se indican con su fuente.
 
 ## Punto de partida (sin cambios)
 
@@ -11,12 +11,12 @@ Estado: **borrador pendiente de revisión de Fer**. Documento de planificación:
 
 ## Datos sintéticos de la PR #17: solo diagnóstico
 
-El conjunto sintético de la PR #17 (rama `feat/t04-nox-synthetic-diagnostic`) sirve únicamente para comprobar el pipeline y estudiar si el modelo aprende un patrón controlado.
+El conjunto sintético del [PR #17](https://github.com/fer-trk/project-ai-computer-vision-objects/pull/17), ya integrado en `dev`, sirve únicamente para comprobar el pipeline y estudiar si el modelo aprende un patrón controlado.
 
 - **No se mezcla** con el dataset oficial de T04: ni en `train`, `val` ni `test`, ni como aumento o relleno de negativos.
 - **No entra** en ninguna métrica publicada ni en la evaluación de T05/T10. Un buen resultado sobre él no es evidencia de fiabilidad.
 - No se sube a Roboflow ni sustituye imágenes reales.
-- Se mantiene en `data-synthetic/`, con sus propias particiones `diag_train`/`diag_val`.
+- La referencia versionada (manifiesto, YAML y etiquetas) se conserva en `data-synthetic/nox-text-diagnostic/`. El generador escribe el conjunto completo en `local-artifacts/nox-text-diagnostic/`, ignorado por Git, sin sobrescribir la referencia. Sus particiones propias siguen siendo `diag_train`/`diag_val`.
 
 ## Plan A — esencial completo con datos reales
 
