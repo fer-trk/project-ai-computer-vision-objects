@@ -2,6 +2,8 @@
 
 import json
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -73,15 +75,38 @@ class SyntheticTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             synthetic.build(self.root / "a", 7, COUNTS)
 
-    def test_val_only_font_not_used_in_training(self):
+    def test_reserved_font_not_used_in_positive_training_examples(self):
         for record in self.manifest["images"]:
-            if record["split"] == "diag_train":
+            if record["split"] == "diag_train" and record["positive"]:
                 for item in record["transformations"].get("prints", []):
                     self.assertNotEqual(item["font"], synthetic.VAL_ONLY_FONT)
 
     def test_yolo_row_round_trip(self):
         row = synthetic.yolo_row([20, 10, 60, 30], (100, 50))
         self.assertEqual([round(float(v), 6) for v in row.split()[1:]], [0.4, 0.4, 0.4, 0.4])
+
+    def test_cli_default_generates_from_fresh_checkout_without_touching_reference(self):
+        repo = self.root / "fresh-checkout"
+        script = repo / "scripts/generate_nox_synthetic.py"
+        script.parent.mkdir(parents=True)
+        shutil.copyfile(synthetic.__file__, script)
+        reference = repo / "data-synthetic/nox-text-diagnostic/manifest.json"
+        reference.parent.mkdir(parents=True)
+        reference.write_bytes(b"versioned reference must remain unchanged\n")
+        command = [sys.executable, str(script), "--train", "1", "1", "--val", "1", "1"]
+        result = subprocess.run(command, cwd=repo, capture_output=True, text=True, timeout=120)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        output = repo / "local-artifacts/nox-text-diagnostic"
+        self.assertEqual(synthetic.validate(output)["images"], 4)
+        self.assertEqual(reference.read_bytes(), b"versioned reference must remain unchanged\n")
+        before = (output / "manifest.json").read_bytes()
+        validated = subprocess.run([sys.executable, str(script), "--validate-only"], cwd=repo,
+                                   capture_output=True, text=True, timeout=120)
+        self.assertEqual(validated.returncode, 0, validated.stderr)
+        repeated = subprocess.run(command, cwd=repo, capture_output=True, text=True, timeout=120)
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertIn("Refusing to overwrite", repeated.stderr)
+        self.assertEqual((output / "manifest.json").read_bytes(), before)
 
 
 if __name__ == "__main__":

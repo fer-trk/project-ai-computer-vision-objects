@@ -31,6 +31,7 @@ FONTS = {
     "sans-bold-oblique": "DejaVuSans-BoldOblique.ttf",
     "mono-bold": "DejaVuSansMono-Bold.ttf",
 }
+# Reserved for positive validation prints; negative decoy text can use every font.
 VAL_ONLY_FONT = "mono-bold"
 FONT_LICENSE = "Bitstream Vera / DejaVu fonts license (free to use and redistribute); bundled with matplotlib, not copied into the repository"
 TEXT_PALETTE = ((255, 255, 255), (245, 245, 245), (12, 12, 12), (255, 115, 20), (255, 214, 0), (200, 200, 200), (230, 30, 50), (20, 60, 180))
@@ -606,7 +607,8 @@ def ultralytics_check(output, manifest):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "data-synthetic/nox-text-diagnostic")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "local-artifacts/nox-text-diagnostic",
+                        help="new generated folder (default: local-artifacts/nox-text-diagnostic); never overwrites a set")
     parser.add_argument("--seed", type=int, default=20261103)
     parser.add_argument("--train", type=int, nargs=2, metavar=("POS", "NEG"), default=(100, 60))
     parser.add_argument("--val", type=int, nargs=2, metavar=("POS", "NEG"), default=(24, 16))

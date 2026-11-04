@@ -22,31 +22,66 @@ Es un conjunto **sintético** (`synthetic: true`), separado del dataset oficial 
 
 Semilla global `20261103`; cada imagen usa `default_rng([semilla, índice])`.
 
+Desde la raíz de la rama `feat/t04-nox-synthetic-diagnostic`, preparar un entorno
+con Python 3.11. `requirements-tools.txt` incluye Matplotlib y sus dependencias
+fijadas; no hacen falta Torch, Ultralytics ni GPU para generar y validar.
+
 ```powershell
-.\.venv\Scripts\python.exe scripts/generate_nox_synthetic.py --ultralytics
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-tools.txt
+.\.venv\Scripts\python.exe scripts/generate_nox_synthetic.py
 .\.venv\Scripts\python.exe scripts/generate_nox_synthetic.py --validate-only
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
+
+La salida predeterminada es `local-artifacts/nox-text-diagnostic/`, ignorada por
+Git. Contiene imágenes, etiquetas, YAML y un manifiesto nuevos. Los archivos de
+`data-synthetic/nox-text-diagnostic/` son la referencia versionada y no se
+sobrescriben. Esto permite generar desde un clon nuevo aunque la referencia ya
+incluya `manifest.json`.
+
+Para otra generación, elegir **una carpeta nueva** dentro de `local-artifacts/`
+y usar el mismo `--output` al validarla. No borrar el conjunto anterior:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/generate_nox_synthetic.py --output local-artifacts/nox-text-diagnostic-second
+.\.venv\Scripts\python.exe scripts/generate_nox_synthetic.py --output local-artifacts/nox-text-diagnostic-second --validate-only
+```
+
+La carga adicional con Ultralytics es opcional y requiere instalar previamente
+`requirements-inference.txt` en un entorno de inferencia separado. En ese
+entorno, ejecutar `scripts/generate_nox_synthetic.py --validate-only --ultralytics`
+con el mismo `--output`. No entrena un modelo.
 
 El generador rechaza sobrescribir un conjunto existente. `manifest.json` incluye semilla, parámetros, versiones de la herramienta (generador 1.0.0, Python 3.11.9, Pillow 13.0.0, NumPy 2.4.6, Matplotlib 3.11.2), clase, caja en píxeles y YOLO, dimensiones, hash SHA-256 de imagen y etiqueta, tipo de escena y transformaciones. Los hashes de las imágenes dependen de esas versiones: con otras puede variar el píxel exacto aunque las etiquetas coincidan.
 
 ## Procedencia y licencias
 
-Ninguna imagen real, fotograma ni recurso de marca. Todo se dibuja con el script. Único recurso externo: fuentes DejaVu (Sans Bold, Serif Bold, Sans Bold Oblique, Sans Mono Bold) incluidas con Matplotlib, bajo la licencia Bitstream Vera/DejaVu, que permite uso y redistribución. No se copian al repositorio; sus hashes están en el manifiesto. `mono-bold` solo aparece en validación (7 de 27 impresiones).
+Ninguna imagen real, fotograma ni recurso de marca. Todo se dibuja con el script. Único recurso externo: fuentes DejaVu (Sans Bold, Serif Bold, Sans Bold Oblique, Sans Mono Bold) incluidas con Matplotlib, bajo la licencia Bitstream Vera/DejaVu, que permite uso y redistribución. No se copian al repositorio; sus hashes están en el manifiesto. `mono-bold` se reserva para las impresiones **positivas** de validación (7 de 27); también aparece en texto señuelo de cinco imágenes negativas de entrenamiento. No es una fuente totalmente ausente de train.
 
 ## Publicación en Git
 
-Se publican el generador, las pruebas, `manifest.json`, `dataset.yaml`, `labels/` y este README. Las imágenes (`images/`) están excluidas por `.gitignore`; se regeneran con el comando anterior.
+Se publican el generador, las pruebas, `manifest.json`, `dataset.yaml`, `labels/` y este README de referencia. Las imágenes no se publican. La reproducción se guarda completa en `local-artifacts/`, excluido por `.gitignore`.
 
 ## Validación realizada
 
 - Cajas dentro de la imagen, clase 0, conversión YOLO ↔ píxeles (tolerancia 0,001 px), positivas con etiqueta y negativas con etiqueta vacía, hashes de imagen y etiqueta, dimensiones, ausencia de duplicados y de archivos sobrantes, y YAML esperado.
 - Carga real con `YOLODataset` de Ultralytics 8.4.189: `diag_train` 160 imágenes/107 cajas y `diag_val` 40/27, con 0 corruptos.
-- Pruebas: 9 nuevas (`tests/test_generate_nox_synthetic.py`) y suite completa de 51 pruebas, de las que 16 se omiten porque falta FFmpeg en este equipo.
+- Validación inicial: 9 pruebas nuevas y suite de 51 pruebas, con 16 omisiones por falta de FFmpeg en aquel entorno.
+
+### Corrección de reproducibilidad — 04/11/2026
+
+- Instalación desde un entorno virtual nuevo con Python 3.11.9 y solo `requirements-tools.txt`; `pip check` correcto. Matplotlib y sus dependencias quedan fijadas, junto con PyAV 16.1.0 para las pruebas de vídeo existentes (misma versión que `requirements-video.txt`). Torch y Ultralytics no están instalados en este entorno.
+- Suite completa: **52 pruebas correctas, ninguna omitida**, con FFmpeg/FFprobe disponibles. Incluye una prueba del comando predeterminado desde una copia nueva con manifiesto de referencia existente, validación posterior y rechazo de un segundo intento sin sobrescribir.
+- Generación completa: 200 imágenes y 134 cajas; los 200 hashes de imágenes y los 200 hashes de etiquetas coinciden con el manifiesto de referencia. El algoritmo y las anotaciones no cambian.
+- Salidas de reproducción en `local-artifacts/`, ignoradas por Git; manifiesto, YAML y etiquetas de referencia sin cambios.
+- Se aclara el alcance de la fuente reservada: solo se excluye de positivos de train; los negativos señuelo pueden usarla. No se afirma separación total de tipografía.
+- No se ejecutó entrenamiento, inferencia con modelos reales ni carga nueva con Ultralytics en esta corrección. No se usó el dataset real de T05/T10.
 
 ## Limitaciones: por qué no demuestra generalización
 
 - La palabra usa fuentes genéricas, no la tipografía real de NOX; fondos, brazos, público y pala son dibujos simples, no escenas reales.
-- Entrenamiento y validación salen del mismo generador, con las mismas escenas, oclusores y distribuciones; `diag_val` solo añade una fuente no vista. No es validación independiente ni test ciego.
+- Entrenamiento y validación salen del mismo generador, con las mismas escenas, oclusores y distribuciones. La fuente reservada para positivos de `diag_val` ya puede verse en texto señuelo de train. No es validación independiente ni test ciego.
 - Las perforaciones, el desenfoque y la oclusión son aproximaciones. Que un modelo aprenda este patrón no implica que detecte NOX en vídeos reales.
 - Un buen resultado aquí no debe citarse como fiabilidad del detector ni como métrica oficial. Los negativos sintéticos no sustituyen negativos reales (ropa, público y brazos filmados).
 - `nox_simbolo` queda fuera: no se genera la X independiente.
