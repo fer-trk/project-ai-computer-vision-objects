@@ -6,6 +6,7 @@ Estado: **borrador para revisión**. Resume el guion de una exposición de 10 mi
 
 - 10 diapositivas para exponer, unos 10 minutos, más 5 de anexo para preguntas.
 - Responde a lo que pide el [briefing](assignment.md): objetivos, desarrollo, tecnologías, demo en vivo y gestión del proyecto.
+- Guion hablado para dos personas, con tiempos y reparto: [final-presentation-script.md](final-presentation-script.md).
 - La presentación en sí, sus capturas y su PDF se conservan **fuera de Git**. Ver la sección de archivos externos.
 
 ## Guion por diapositiva
