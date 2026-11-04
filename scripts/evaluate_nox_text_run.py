@@ -8,21 +8,25 @@ as precision.
 
 import argparse
 import csv
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 
-from predict_image import PredictionError, file_hash, predict_with_yolo, probability, run_inference
+from predict_image import PredictionError, file_hash, predict_with_yolo, probability, read_image, run_inference
+import verify_nox_text_results as t05
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_CLASSES = {0: "nox_texto"}
 RESERVED_SPLIT = "test"
 OUTPUT_FOLDERS = ("data/review", "local-artifacts")
 SYNTHETIC_FOLDER = "data-synthetic"
-VERDICTS = ("true_positive", "false_positive")
+VERDICTS = ("true_positive", "false_positive", "ambiguous")
+IDENTITY_FIELDS = ("image", "label", "source_sha256", "label_sha256", "width", "height", "split", "boxes", "video_id", "group_id")
 FIXED_LIMITATIONS = [
     "Confidence is a model score, not measured precision or a clarity classification",
     "Counts come from manual review of the listed images only and are not a quality claim",
@@ -39,6 +43,7 @@ def read_class_names(checkpoint):
     """Read class names from a local checkpoint without running inference."""
     os.environ.setdefault("YOLO_CONFIG_DIR", str(ROOT / "local-artifacts/ultralytics"))
     os.environ.setdefault("YOLO_OFFLINE", "true")
+    os.environ.setdefault("YOLO_AUTOINSTALL", "false")
     try:
         from ultralytics import YOLO
     except ImportError as exc:
@@ -90,6 +95,24 @@ def load_reserved_images(manifest_path, images_dir, names=None):
     classes = manifest.get("classes")
     if not isinstance(classes, dict) or {str(key): value for key, value in classes.items()} != {"0": "nox_texto"}:
         raise EvaluationError("El manifiesto no declara únicamente la clase 0: nox_texto")
+    if manifest.get("synthetic") or any(entry.get("synthetic") for entry in entries):
+        raise EvaluationError("No se admiten datos sintéticos en la evaluación")
+    for entry in entries:
+        if entry.get("split") not in ("train", "val", "test"):
+            raise EvaluationError("Todas las imágenes deben declarar train, val o test")
+        for field in ("video_id", "group_id"):
+            if not isinstance(entry.get(field), str) or not entry[field].strip():
+                raise EvaluationError(f"Falta procedencia verificable: {field}")
+        if not isinstance(entry.get("source_sha256"), str) or not re.fullmatch(r"[0-9a-f]{64}", entry["source_sha256"]):
+            raise EvaluationError("Una imagen no tiene un SHA-256 válido")
+    for field in ("source_sha256", "video_id", "group_id"):
+        partitions = {split: {entry[field] for entry in entries if entry["split"] == split}
+                      for split in ("train", "val", "test")}
+        if any(partitions[left] & partitions[right] for left, right in (("train", "val"), ("train", "test"), ("val", "test"))):
+            raise EvaluationError(f"Fuga entre particiones por {field}")
+    paths = [entry.get("image") for entry in entries]
+    if not all(isinstance(path, str) and path for path in paths) or len(set(paths)) != len(paths):
+        raise EvaluationError("Las rutas de imágenes deben ser únicas y no vacías")
     reserved = [entry for entry in entries if entry.get("split") == RESERVED_SPLIT]
     if not reserved:
         raise EvaluationError("El manifiesto no tiene una partición reservada 'test'")
@@ -97,6 +120,8 @@ def load_reserved_images(manifest_path, images_dir, names=None):
     if any(entry.get("source_sha256") in other_hashes for entry in reserved):
         raise EvaluationError("Una imagen reservada también aparece en train o val")
     if names is not None:
+        if not names:
+            raise EvaluationError("Selecciona al menos una imagen reservada")
         by_name = {}
         for entry in reserved:
             by_name.setdefault(Path(str(entry.get("image"))).name, []).append(entry)
@@ -123,8 +148,74 @@ def load_reserved_images(manifest_path, images_dir, names=None):
             raise EvaluationError(f"{entry['image']} queda fuera de la carpeta de imágenes o es sintética")
         if not path.is_file():
             raise EvaluationError(f"No existe la imagen reservada {entry['image']}")
+        if file_hash(path) != entry["source_sha256"]:
+            raise EvaluationError(f"El hash real de {entry['image']} no coincide con el manifiesto")
+        image = read_image(path)
+        try:
+            if image.size != (entry["width"], entry["height"]):
+                raise EvaluationError(f"Las dimensiones de {entry['image']} no coinciden con el manifiesto")
+        finally:
+            image.close()
         items.append({"entry": entry, "path": path})
     return manifest, items
+
+
+def image_identity(manifest):
+    """Compare data identity while allowing documentary fields such as source paths to differ."""
+    return sorted(({key: entry.get(key) for key in IDENTITY_FIELDS} for entry in manifest["images"]),
+                  key=lambda entry: entry["image"])
+
+
+def load_verified_training_run(checkpoint, manifest, confidence, rationale):
+    """Bind T10 to the exact artifacts and threshold already accepted by T05."""
+    run_dir = checkpoint.parent.parent.parent
+    if checkpoint != run_dir / "train/weights/best.pt":
+        raise EvaluationError("Usa train/weights/best.pt del run verificado de T05")
+    verification_path = run_dir / "verification.json"
+    verification = load_json(verification_path, "verification.json de T05")
+    flags = ("complete", "args_match_agreed", "experiment_match_agreed", "dataset_matches_approved",
+             "model_matches_agreed", "confidence_selection_recorded")
+    if any(verification.get(flag) is not True for flag in flags) or verification.get("errors") != []:
+        raise EvaluationError("T05 no tiene una verificación completa y aceptable")
+    if verification.get("run_name") != run_dir.name:
+        raise EvaluationError("La verificación de T05 no corresponde a esta carpeta de run")
+    inventory = load_json(run_dir / "run-manifest.json", "run-manifest.json de T05")
+    if (inventory.get("run_name") != run_dir.name or inventory.get("status") != "training_completed"
+            or inventory.get("error_log_present") is not False or inventory.get("missing_required") != []):
+        raise EvaluationError("El inventario de T05 indica un run incompleto o inconsistente")
+    if not isinstance(inventory.get("files"), dict) or not set(t05.REQUIRED).issubset(inventory["files"]):
+        raise EvaluationError("El inventario de T05 no contiene todos los archivos obligatorios")
+    for name, expected in inventory["files"].items():
+        path = (run_dir / name).resolve()
+        if not path.is_relative_to(run_dir) or not path.is_file():
+            raise EvaluationError("El inventario de T05 contiene una ruta inválida o ausente")
+        if file_hash(path) != expected["sha256"] or path.stat().st_size != expected["bytes"]:
+            raise EvaluationError(f"El artefacto de T05 ha cambiado: {name}")
+    for name in ("train/weights/best.pt", "train/weights/last.pt"):
+        if verification.get("checkpoints", {}).get(name, {}).get("valid") is not True:
+            raise EvaluationError("Los pesos de T05 no fueron validados")
+    packaged_path = run_dir / "dataset-manifest.json"
+    if file_hash(packaged_path) != t05.EXPECTED_DATASET_MANIFEST_SHA256:
+        raise EvaluationError("El manifiesto de T05 no es el empaquetado aprobado")
+    packaged = load_json(packaged_path, "dataset-manifest.json")
+    if packaged.get("classes") != {"0": "nox_texto"} or image_identity(manifest) != image_identity(packaged):
+        raise EvaluationError("El manifiesto de evaluación no corresponde al dataset verificado por T05")
+    if manifest.get("independent_blind_test") != packaged.get("independent_blind_test"):
+        raise EvaluationError("El estado de independencia del test no coincide con el manifiesto de T05")
+    experiment = load_json(run_dir / "experiment.json", "experiment.json de T05")
+    args = t05.yaml.safe_load((run_dir / "train/args.yaml").read_text(encoding="utf-8"))
+    if (experiment.get("status") != "training_completed" or experiment.get("run_name") != run_dir.name
+            or experiment.get("model") != t05.EXPECTED_MODEL
+            or experiment.get("dataset_zip_sha256") != t05.EXPECTED_DATASET_ZIP_SHA256
+            or not t05.parameters_match(experiment.get("parameters")) or not t05.parameters_match(args)
+            or Path(str(args.get("model", "")).replace("\\", "/")).name != t05.EXPECTED_MODEL):
+        raise EvaluationError("El experimento de T05 no coincide con el ensayo acordado")
+    if (isinstance(experiment.get("confidence_threshold"), bool)
+            or confidence != experiment.get("confidence_threshold") or rationale != experiment.get("confidence_rationale")):
+        raise EvaluationError("Reutiliza exactamente el umbral y motivo registrados antes de entrenar en T05")
+    return run_dir, {"run_name": run_dir.name, "verification_sha256": file_hash(verification_path),
+                     "checkpoint_sha256": inventory["files"]["train/weights/best.pt"]["sha256"],
+                     "dataset_manifest_sha256": file_hash(packaged_path)}
 
 
 def write_csv(path, fields, rows):
@@ -134,15 +225,39 @@ def write_csv(path, fields, rows):
         writer.writerows(rows)
 
 
+@contextmanager
+def evaluation_attempt(run_dir, details):
+    """Persist a single attempt per training run, even if inference fails."""
+    lock = run_dir / "T10_STARTED.lock"
+    try:
+        with lock.open("x", encoding="utf-8") as handle:
+            json.dump(dict(details, status="started"), handle, indent=2)
+    except FileExistsError:
+        raise EvaluationError("T10 ya se intentó para este run; cambiar la salida no autoriza repetirlo") from None
+    try:
+        yield
+    except BaseException as error:
+        lock.write_text(json.dumps(dict(details, status="failed", error=f"{type(error).__name__}: {error}"), indent=2), encoding="utf-8")
+        raise
+    else:
+        lock.write_text(json.dumps(dict(details, status="completed"), indent=2), encoding="utf-8")
+
+
 def run_evaluation(
     *, checkpoint, images_dir, manifest, output, confidence, image_names=None, confidence_rationale=None,
     iou=.7, image_size=640, predictor=predict_with_yolo, class_reader=read_class_names,
     root=ROOT, ignore_check=git_ignores,
 ):
     """Run the checks, then one inference per reserved image, and publish atomically."""
-    if confidence is None:
+    if confidence is None or isinstance(confidence, bool):
         raise EvaluationError("Indica --confidence; no existe un umbral por defecto")
     confidence = probability(confidence, "Umbral de confianza")
+    if not isinstance(confidence_rationale, str) or not confidence_rationale.strip():
+        raise EvaluationError("Indica el motivo del umbral elegido antes de entrenar")
+    confidence_rationale = confidence_rationale.strip()
+    iou = probability(iou, "Umbral IoU de NMS")
+    if isinstance(image_size, bool) or image_size != 640:
+        raise EvaluationError("Se conserva image_size=640, como en T05")
     checkpoint, images_dir, manifest_path, output = (Path(value).resolve() for value in (checkpoint, images_dir, manifest, output))
     if not checkpoint.is_file() or checkpoint.suffix.lower() != ".pt":
         raise EvaluationError("Indica un checkpoint .pt local existente")
@@ -152,6 +267,8 @@ def run_evaluation(
     if output == images_dir or output in images_dir.parents or images_dir in output.parents:
         raise EvaluationError("La salida y la carpeta de imágenes no pueden contenerse")
     manifest_data, items = load_reserved_images(manifest_path, images_dir, image_names)
+    manifest_hash = file_hash(manifest_path)
+    training_run, training_reference = load_verified_training_run(checkpoint, manifest_data, confidence, confidence_rationale)
     try:
         names = {int(key): str(value) for key, value in class_reader(checkpoint).items()}
     except (TypeError, ValueError) as exc:
@@ -159,8 +276,13 @@ def run_evaluation(
     if names != EXPECTED_CLASSES:
         raise EvaluationError(f"El checkpoint debe tener solo la clase 0: nox_texto, no {names}")
     checkpoint_hash = file_hash(checkpoint)
+    if checkpoint_hash != training_reference["checkpoint_sha256"]:
+        raise EvaluationError("El checkpoint cambió después de verificar T05")
     output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=".evaluation-", dir=output.parent) as temporary:
+    attempt = {"checkpoint_sha256": checkpoint_hash, "manifest_sha256": manifest_hash,
+               "confidence": confidence, "confidence_rationale": confidence_rationale,
+               "images": [item["entry"]["image"] for item in items], "output": str(output), "iou": iou, "image_size": image_size}
+    with evaluation_attempt(training_run, attempt), tempfile.TemporaryDirectory(prefix=".evaluation-", dir=output.parent) as temporary:
         staged = Path(temporary) / "run"
         (staged / "images").mkdir(parents=True)
         image_rows, detection_rows, review_images = [], [], []
@@ -171,6 +293,8 @@ def run_evaluation(
                 item["path"], checkpoint, staged / "images" / folder, confidence=confidence,
                 iou=iou, image_size=image_size, predictor=predictor,
             )
+            if report["image"]["sha256"] != entry["source_sha256"]:
+                raise EvaluationError("La imagen cambió después de su comprobación inicial")
             if (report["image"]["width"], report["image"]["height"]) != (entry["width"], entry["height"]):
                 raise EvaluationError(f"{entry['image']} no coincide con las dimensiones del manifiesto")
             if report["model"]["class_names"] != EXPECTED_CLASSES or report["model"]["sha256"] != checkpoint_hash:
@@ -194,6 +318,7 @@ def run_evaluation(
                 "image": entry["image"], "image_sha256": report["image"]["sha256"],
                 "detections": [{"detection_id": d["detection_id"], "verdict": None} for d in report["detections"]],
                 "missed_logos": None, "notes": "",
+                "ambiguous_logos": 0,
             })
         write_csv(staged / "summary.csv", [
             "index", "image", "image_sha256", "width", "height", "annotated_boxes", "detection_count",
@@ -206,8 +331,9 @@ def run_evaluation(
         run = {
             "schema_version": 1, "complete": True, "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "checkpoint": {"filename": checkpoint.name, "sha256": checkpoint_hash, "class_names": names},
+            "t05": training_reference,
             "manifest": {
-                "filename": manifest_path.name, "sha256": file_hash(manifest_path), "status": manifest_data.get("status"),
+                "filename": manifest_path.name, "sha256": manifest_hash, "status": manifest_data.get("status"),
                 "independent_blind_test": manifest_data.get("independent_blind_test"),
                 "rights_status": manifest_data.get("rights_status"), "limitations": manifest_data.get("limitations", []),
             },
@@ -225,11 +351,16 @@ def run_evaluation(
             "manual_review": "pending: fill review-template.json as review.json, then run the report command",
             "limitations": FIXED_LIMITATIONS,
         }
+        if file_hash(manifest_path) != manifest_hash:
+            raise EvaluationError("El manifiesto cambió durante la evaluación")
+        run["artifacts"] = {path.relative_to(staged).as_posix(): file_hash(path)
+                            for path in staged.rglob("*") if path.is_file()}
         (staged / "run.json").write_text(json.dumps(run, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
         template = {
             "schema_version": 1, "reviewed": False, "reviewer": None, "checkpoint_sha256": checkpoint_hash,
-            "instructions": "Set reviewed=true and reviewer. Per detection: verdict is true_positive or false_positive. "
-                            "Per image: missed_logos is the integer count of visible NOX text logos with no detection.",
+            "instructions": "Set reviewed=true and reviewer. Per detection: true_positive, false_positive or ambiguous. "
+                            "Per image: missed_logos counts clear visible NOX text logos with no detection; ambiguous_logos counts uncertain unmatched candidates. "
+                            "Explain ambiguous cases in notes; ambiguity is excluded from TP/FP/FN counts.",
             "images": review_images,
         }
         (staged / "review-template.json").write_text(json.dumps(template, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -239,9 +370,12 @@ def run_evaluation(
 
 def load_json(path, label):
     try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
+        value = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise EvaluationError(f"No se puede leer {label}") from exc
+    if not isinstance(value, dict):
+        raise EvaluationError(f"{label} debe ser un objeto JSON")
+    return value
 
 
 def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignores):
@@ -252,6 +386,12 @@ def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignor
     run, review = load_json(run_dir / "run.json", "run.json"), load_json(review_path, "la revisión manual")
     if run.get("complete") is not True:
         raise EvaluationError("La ejecución no está completa")
+    if not isinstance(run.get("artifacts"), dict) or not run["artifacts"]:
+        raise EvaluationError("Falta el inventario de artefactos de evaluación")
+    for name, expected in run["artifacts"].items():
+        path = (run_dir / name).resolve()
+        if not path.is_relative_to(run_dir) or not path.is_file() or file_hash(path) != expected:
+            raise EvaluationError(f"El artefacto de evaluación cambió o es inválido: {name}")
     if review.get("reviewed") is not True or not isinstance(review.get("reviewer"), str) or not review["reviewer"].strip():
         raise EvaluationError("La revisión manual debe indicar reviewed=true y reviewer")
     if review.get("checkpoint_sha256") != run["checkpoint"]["sha256"]:
@@ -259,11 +399,14 @@ def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignor
     reviewed = {(item.get("image"), item.get("image_sha256")): item for item in review.get("images", [])}
     if len(reviewed) != len(review.get("images", [])) or set(reviewed) != {(row["image"], row["image_sha256"]) for row in run["images"]}:
         raise EvaluationError("La revisión no cubre exactamente las imágenes de la ejecución")
-    images, false_positives, false_negatives, without = [], [], [], []
-    counts = {"true_positives": 0, "false_positives": 0, "false_negatives": 0}
+    images, false_positives, false_negatives, without, ambiguous = [], [], [], [], []
+    counts = {"true_positives": 0, "false_positives": 0, "false_negatives": 0, "ambiguous_detections": 0, "ambiguous_logos": 0}
     for row in run["images"]:
         item = reviewed[(row["image"], row["image_sha256"])]
-        predictions = load_json(run_dir / row["predictions_json"], row["predictions_json"])
+        prediction_path = (run_dir / row["predictions_json"]).resolve()
+        if not prediction_path.is_relative_to(run_dir) or row["predictions_json"] not in run["artifacts"]:
+            raise EvaluationError("Ruta de predicciones inválida en run.json")
+        predictions = load_json(prediction_path, row["predictions_json"])
         verdicts = {entry.get("detection_id"): entry.get("verdict") for entry in item.get("detections", [])}
         if sorted(verdicts) != [d["detection_id"] for d in predictions["detections"]] or len(verdicts) != len(item.get("detections", [])):
             raise EvaluationError(f"La revisión de {row['image']} no coincide con sus detecciones")
@@ -272,6 +415,13 @@ def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignor
         missed = item.get("missed_logos")
         if isinstance(missed, bool) or not isinstance(missed, int) or missed < 0:
             raise EvaluationError(f"missed_logos de {row['image']} debe ser un entero no negativo")
+        uncertain = item.get("ambiguous_logos", 0)
+        if isinstance(uncertain, bool) or not isinstance(uncertain, int) or uncertain < 0:
+            raise EvaluationError("ambiguous_logos debe ser un entero no negativo")
+        if not isinstance(item.get("notes", ""), str):
+            raise EvaluationError("Las notas deben ser texto")
+        if (uncertain or "ambiguous" in verdicts.values()) and not item.get("notes", "").strip():
+            raise EvaluationError("Explica los casos ambiguos en las notas de la imagen")
         detections = []
         for detection in predictions["detections"]:
             verdict = verdicts[detection["detection_id"]]
@@ -279,17 +429,21 @@ def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignor
                 "detection_id": detection["detection_id"], "class_name": detection["class_name"],
                 "confidence": detection["confidence"], "bbox_xyxy": detection["bbox_xyxy"], "verdict": verdict,
             })
-            counts["true_positives" if verdict == "true_positive" else "false_positives"] += 1
+            count_key = {"true_positive": "true_positives", "false_positive": "false_positives", "ambiguous": "ambiguous_detections"}[verdict]
+            counts[count_key] += 1
             if verdict == "false_positive":
                 false_positives.append({"image": row["image"], **detections[-1]})
+            elif verdict == "ambiguous":
+                ambiguous.append({"image": row["image"], **detections[-1]})
         counts["false_negatives"] += missed
+        counts["ambiguous_logos"] += uncertain
         if missed:
             false_negatives.append({"image": row["image"], "missed_logos": missed})
         if not detections:
             without.append(row["image"])
         images.append({
             "image": row["image"], "image_sha256": row["image_sha256"], "detections": detections,
-            "missed_logos": missed, "notes": str(item.get("notes", "")),
+            "missed_logos": missed, "ambiguous_logos": uncertain, "notes": str(item.get("notes", "")),
         })
     limitations = list(run["limitations"]) + [f"Manifest: {text}" for text in run["manifest"].get("limitations", [])]
     if run["manifest"].get("independent_blind_test") is not True:
@@ -297,10 +451,11 @@ def build_report(run_dir, review_path=None, *, root=ROOT, ignore_check=git_ignor
     report = {
         "schema_version": 1, "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "checkpoint": run["checkpoint"], "parameters": run["parameters"], "reviewer": review["reviewer"].strip(),
-        "counts": {"images": len(images), "detections": counts["true_positives"] + counts["false_positives"], **counts,
+        "manifest": run["manifest"], "t05": run["t05"], "artifacts": run["artifacts"], "review_sha256": file_hash(review_path),
+        "counts": {"images": len(images), "detections": counts["true_positives"] + counts["false_positives"] + counts["ambiguous_detections"], **counts,
                    "images_without_detections": len(without)},
         "images": images, "images_without_detections": without, "false_positives": false_positives,
-        "false_negatives": false_negatives, "limitations": limitations,
+        "false_negatives": false_negatives, "ambiguous_detections": ambiguous, "limitations": limitations,
     }
     markdown = render_markdown(report)
     json_path, markdown_path = run_dir / "report.json", run_dir / "report.md"
@@ -321,13 +476,14 @@ def render_markdown(report):
     lines = [
         "# Evaluación única de nox_texto", "",
         f"- Checkpoint: `{report['checkpoint']['filename']}` (SHA-256 `{report['checkpoint']['sha256']}`)",
+        f"- Manifiesto: `{report['manifest']['filename']}` (SHA-256 `{report['manifest']['sha256']}`)",
         f"- Umbral de confianza: {parameters['confidence']:g}. Motivo: {cell(parameters.get('confidence_rationale') or 'sin documentar')}",
         f"- Revisor: {cell(report['reviewer'])}", "",
         "## Recuentos revisados manualmente", "",
-        "| Imágenes | Detecciones | Verdaderos positivos | Falsos positivos | Falsos negativos | Imágenes sin detecciones |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Imágenes | Detecciones | Verdaderos positivos | Falsos positivos | Falsos negativos | Imágenes sin detecciones | Detecciones ambiguas | Candidatos ambiguos sin detectar |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
         f"| {counts['images']} | {counts['detections']} | {counts['true_positives']} | {counts['false_positives']} | "
-        f"{counts['false_negatives']} | {counts['images_without_detections']} |", "",
+        f"{counts['false_negatives']} | {counts['images_without_detections']} | {counts['ambiguous_detections']} | {counts['ambiguous_logos']} |", "",
         "## Detecciones por imagen", "",
         "| Imagen | ID | Score del modelo | Caja xyxy | Veredicto |", "| --- | --- | --- | --- | --- |",
     ]
@@ -340,6 +496,8 @@ def render_markdown(report):
         [f"- {cell(item['image'])}, detección {item['detection_id']}" for item in report["false_positives"]] or ["Ninguno."])
     lines += ["", "## Falsos negativos", ""] + (
         [f"- {cell(item['image'])}: {item['missed_logos']} logo(s) sin detectar" for item in report["false_negatives"]] or ["Ninguno."])
+    lines += ["", "## Casos ambiguos (fuera de TP/FP/FN)", ""] + (
+        [f"- {cell(item['image'])}, detección {item['detection_id']}" for item in report["ambiguous_detections"]] or ["Sin detecciones ambiguas."])
     notes = [(image["image"], image["notes"]) for image in report["images"] if image["notes"].strip()]
     if notes:
         lines += ["", "## Notas del revisor", ""] + [f"- {cell(name)}: {cell(text)}" for name, text in notes]
@@ -356,7 +514,7 @@ def build_parser():
     run.add_argument("--manifest", type=Path, required=True)
     run.add_argument("--output", type=Path, required=True)
     run.add_argument("--confidence", type=float, required=True)
-    run.add_argument("--confidence-rationale")
+    run.add_argument("--confidence-rationale", required=True)
     run.add_argument("--image", action="append", dest="image_names", help="nombre de una imagen reservada; repetible")
     run.add_argument("--iou", type=float, default=.7)
     run.add_argument("--image-size", type=int, default=640)
@@ -380,7 +538,7 @@ def main(argv=None):
         else:
             result = build_report(args.run_dir, args.review)
             print(json.dumps({"complete": True, **result["counts"], "output": str(args.run_dir.resolve())}, ensure_ascii=False))
-    except (PredictionError, OSError, RuntimeError) as exc:
+    except (PredictionError, OSError, RuntimeError, ValueError, KeyError, TypeError) as exc:
         parser.exit(2, f"Error de evaluación: {exc}\n")
 
 
