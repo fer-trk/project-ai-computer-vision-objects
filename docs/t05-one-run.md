@@ -14,6 +14,7 @@ Una sola clase, `nox_texto`, con el ZIP aprobado (SHA-256 `8332c1b07824f7c5a2aba
 | SHA-256 del ZIP, contenido exacto, hashes de imágenes/etiquetas, dimensiones, cajas, grupos disjuntos y 19/3/1 | cuaderno (ya existía) |
 | YAML y manifiesto del ZIP solo con `0: nox_texto` | cuaderno, nuevo |
 | GPU CUDA obligatoria; sin GPU no se entrena | cuaderno (ya existía) |
+| Entorno validado antes de subir datos, preparar el run y entrenar; versión y GPU comprobadas tras la instalación | primeras dos celdas; [guía del entorno](colab-env-check.md) |
 | Parámetros acordados no editados (si difieren, falla) y `ONE_RUN.lock`: un segundo intento falla | cuaderno, nuevo |
 | Umbral y motivo obligatorios antes de entrenar; se guardan y reutilizan antes de mostrar predicciones del test | cuaderno, `experiment-config` |
 | `TRAIN_STARTED.lock`: no repetir la celda de entrenamiento aunque el intento falle antes de crear `train/` | cuaderno, `train` |
@@ -35,7 +36,7 @@ Límites: el bloqueo de un solo run vive junto a los resultados; sin Drive, una 
 
 ## Pasos para Fer
 
-1. Subir `notebooks/nox_text_training.ipynb` a Colab y elegir **Entorno de ejecución → GPU** (gratuita).
+1. Subir `notebooks/nox_text_training.ipynb` a Colab y elegir **Entorno de ejecución → GPU** (gratuita). Ejecutar sus dos primeras celdas de comprobación y continuar dentro del mismo cuaderno y sesión. El éxito del cuaderno de diagnóstico independiente no garantiza que otro notebook comparta su entorno.
 2. Ejecutar las celdas **en orden**. En la celda del dataset, marcar `PERMISSIONS_CONFIRMED` solo si procede y subir el ZIP aprobado. En la configuración, completar `CONFIDENCE_THRESHOLD` y su motivo antes de entrenar. Opcional: `USE_DRIVE = True` conserva resultados y bloqueos tras una desconexión, pero requiere autorizar el montaje; no es obligatorio para usar el cuaderno.
 3. Ejecutar **una vez** entrenamiento y evaluación. No cambiar parámetros ni mirar el test para decidir nada.
 4. Ejecutar la última celda aunque haya fallado: descarga `nox-text-<fecha>-results.zip`. Guardar también el cuaderno ejecutado (**Archivo → Descargar → .ipynb**).
