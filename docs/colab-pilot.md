@@ -1,6 +1,6 @@
 # Primer ensayo gratuito en Colab
 
-[Abrir el cuaderno en Colab](https://colab.research.google.com/github/fer-trk/project-ai-computer-vision-objects/blob/docs/project-specifications/notebooks/nox_colab_pilot.ipynb).
+[Abrir el cuaderno en Colab](https://colab.research.google.com/github/fer-trk/project-ai-computer-vision-objects/blob/main/notebooks/nox_colab_pilot.ipynb).
 
 El usuario eligió Colab gratuito el 26/10/2026. El cuaderno contiene siete bloques de código con explicación en español: comprobar GPU, instalar una versión fijada de Ultralytics, cargar/verificar el ZIP, comprobar configuración y visualizar etiquetas, elegir almacenamiento, entrenar tres épocas y descargar resultados. Todavía no se ha ejecutado en Colab.
 
