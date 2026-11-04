@@ -66,7 +66,8 @@ md('''
 ### 1. Instalar herramientas
 Se conserva PyTorch de Colab. Se instala `jedi` si falta y se fija Ultralytics
 8.4.189. Se desactivan integraciones usando únicamente opciones existentes.
-Si se pide reiniciar la sesión, reiniciarla y volver a la primera celda.
+Si se pide reiniciar la sesión, detenerse antes de entrenar y revisar el entorno;
+no reiniciar automáticamente ni repetir un entrenamiento.
 ''')
 code('''
 import importlib.util
@@ -189,8 +190,20 @@ perder resultados antes de descargarlos. No se compran recursos ni servicios.
 editado y crea `ONE_RUN.lock`; un segundo intento falla. No hay barridos ni repeticiones
 automáticas. Con una sesión nueva sin Drive el bloqueo desaparece: no ejecutar otro ensayo
 sin acuerdo explícito.
+
+Antes de continuar, Fer debe elegir `CONFIDENCE_THRESHOLD` y explicar el motivo en
+`CONFIDENCE_RATIONALE`, sin observar predicciones del test. No hay umbral por defecto.
+La elección se guarda antes del entrenamiento y se reutiliza al mostrar las cajas;
+no equivale a precisión ni a una regla de claridad aceptada.
 ''')
 code('''
+CONFIDENCE_THRESHOLD = None  #@param {type:"raw"}
+CONFIDENCE_RATIONALE = ""  #@param {type:"string"}
+if (isinstance(CONFIDENCE_THRESHOLD,bool) or not isinstance(CONFIDENCE_THRESHOLD,(int,float))
+        or not math.isfinite(CONFIDENCE_THRESHOLD) or not 0<=CONFIDENCE_THRESHOLD<=1
+        or not isinstance(CONFIDENCE_RATIONALE,str) or not CONFIDENCE_RATIONALE.strip()):
+    raise ValueError("Elige y justifica el umbral antes de ver predicciones; no hay un valor por defecto.")
+CONFIDENCE_SELECTION=dict(confidence_threshold=float(CONFIDENCE_THRESHOLD),confidence_rationale=CONFIDENCE_RATIONALE.strip())
 USE_DRIVE = False
 RUNS = WORK/"runs"
 if USE_DRIVE:
@@ -215,7 +228,7 @@ RUN.mkdir(parents=True,exist_ok=False)
 (RUN/"environment.json").write_text(json.dumps(environment,indent=2))
 (RUN/"requirements-resolved.txt").write_text(freeze)
 (RUN/"dataset-manifest.json").write_bytes((DATA/"manifest.json").read_bytes())
-(RUN/"experiment.json").write_text(json.dumps({"run_name":RUN_NAME,"parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"prepared"},indent=2))
+(RUN/"experiment.json").write_text(json.dumps({"run_name":RUN_NAME,"model":"yolo11n.pt","parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"prepared",**CONFIDENCE_SELECTION},indent=2))
 print("Ejecución:",RUN_NAME,"| Resultados:",RUN)
 print(PARAMETERS)
 ''','experiment-config')
@@ -229,9 +242,14 @@ code('''
 if not torch.cuda.is_available():
     raise RuntimeError("La GPU ya no está disponible; detener el ensayo")
 if (RUN/"train").exists():
-    raise FileExistsError("Esta ejecución ya comenzó; crea un nuevo RUN_NAME para otro ensayo")
+    raise FileExistsError("Esta ejecución ya comenzó; detenerse sin repetir el entrenamiento")
+try:
+    with (RUN/"TRAIN_STARTED.lock").open("x") as lock:
+        lock.write(RUN_NAME)
+except FileExistsError:
+    raise FileExistsError("Ya se intentó entrenar este run; detenerse sin repetirlo, aunque falte la carpeta train") from None
 import traceback
-record={"run_name":RUN_NAME,"model":"yolo11n.pt","parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"starting"}
+record={"run_name":RUN_NAME,"model":"yolo11n.pt","parameters":PARAMETERS,"dataset_zip_sha256":EXPECTED_ZIP,"annotations_user_approved":"2026-11-03","status":"starting",**CONFIDENCE_SELECTION}
 started=time.perf_counter()
 try:
     model=YOLO("yolo11n.pt")
@@ -259,8 +277,9 @@ test solo se evalúa ahora; es una reserva exploratoria ya inspeccionada, no una
 prueba final suficiente. No seleccionar umbrales ni reentrenar usando su resultado.
 
 Se mostrarán predicciones sobre las tres imágenes de validación, incluidas las
-dos negativas, y la imagen de reserva. El umbral 0.25 es diagnóstico, no una regla
-de claridad aprobada. Una confianza alta no demuestra exactitud. Comparar cajas
+dos negativas, y la imagen de reserva. Se reutiliza el umbral y motivo guardados
+antes del entrenamiento; no hay un 0.25 implícito ni una regla de claridad aprobada.
+Una confianza alta no demuestra exactitud. Comparar cajas
 con el logo real; no aceptar el modelo solo por una métrica o por acabar 50 épocas.
 ''')
 code('''
@@ -269,7 +288,8 @@ if not best_path.is_file():
     raise FileNotFoundError("No existe best.pt; revisa el entrenamiento")
 best=YOLO(str(best_path))
 assert best.names=={0:"nox_texto"}
-evaluation={"checkpoint_sha256":hashlib.sha256(best_path.read_bytes()).hexdigest(),"test_is_exploratory":True,"splits":{}}
+selected=json.loads((RUN/"experiment.json").read_text())
+evaluation={"checkpoint_sha256":hashlib.sha256(best_path.read_bytes()).hexdigest(),"test_is_exploratory":True,"confidence_threshold":selected["confidence_threshold"],"confidence_rationale":selected["confidence_rationale"],"splits":{}}
 for split in ("val","test"):
     metrics=best.val(data=str(DATA/"dataset.yaml"),split=split,device=0,imgsz=640,batch=2,workers=0,plots=True,project=str(RUN),name="evaluation-"+split)
     evaluation["splits"][split]={k:float(v) for k,v in metrics.results_dict.items()}
@@ -278,14 +298,14 @@ predictions=[]
 for item in manifest["images"]:
     if item["split"] not in ("val","test"):
         continue
-    result=best.predict(str(DATA/item["image"]),conf=0.25,imgsz=640,device=0,save=False,verbose=False)[0]
+    result=best.predict(str(DATA/item["image"]),conf=selected["confidence_threshold"],imgsz=640,device=0,save=False,verbose=False)[0]
     predictions.append({"image":item["image"],"split":item["split"],"reference_boxes":item["boxes"],"predicted_boxes":result.boxes.xyxy.cpu().tolist(),"scores":result.boxes.conf.cpu().tolist(),"classes":result.boxes.cls.cpu().tolist(),"review_status":"pending_human_review"})
     target=RUN/"predictions"/Path(item["image"]).name
     target.parent.mkdir(exist_ok=True)
     result.save(filename=str(target))
     print(item["split"],Path(item["image"]).name,"| referencia:",len(item["boxes"]),"| predicciones:",len(result.boxes))
     display(Image.open(target))
-(RUN/"predictions.json").write_text(json.dumps({"confidence_threshold":0.25,"predictions":predictions},indent=2,allow_nan=False))
+(RUN/"predictions.json").write_text(json.dumps({"confidence_threshold":selected["confidence_threshold"],"confidence_rationale":selected["confidence_rationale"],"predictions":predictions},indent=2,allow_nan=False))
 print(evaluation)
 ''','evaluate')
 md('''

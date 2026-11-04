@@ -83,7 +83,9 @@ with tempfile.TemporaryDirectory(prefix="nox-notebook-") as folder:
                              batch_size=2, augment=False, cache=False, prefix=split+": ")
         assert len(loaded) == count and len(loaded.labels) == count
     checks.append("Ultralytics real loader: train 19 / val 3 / test 1")
-    exec(cells["experiment-config"], state)
+    # This selection belongs only to the offline harness, never to a real run.
+    offline_config = cells["experiment-config"].replace("CONFIDENCE_THRESHOLD = None", "CONFIDENCE_THRESHOLD = 0.25").replace('CONFIDENCE_RATIONALE = ""', 'CONFIDENCE_RATIONALE = "Offline orchestration fixture, not a selected production threshold"')
+    exec(offline_config, state)
     get_cfg(DEFAULT_CFG_DICT, overrides=state["PARAMETERS"])
     checks.append("training parameters accepted by installed Ultralytics")
 
